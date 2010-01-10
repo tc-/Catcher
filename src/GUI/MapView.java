@@ -29,6 +29,9 @@ public class MapView extends Canvas implements CommandListener {
      * paint
      */
     public void paint(Graphics g) {
+        g.setColor(255, 255, 255);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(0, 0, 0);
         g.drawString("Sample Text",0,0,Graphics.TOP|Graphics.LEFT);
     }
     
