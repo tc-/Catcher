@@ -5,6 +5,7 @@
 
 package GUI;
 
+import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.*;
 
 /**
@@ -12,6 +13,7 @@ import javax.microedition.midlet.*;
  */
 public class Catcher extends MIDlet {
     public void startApp() {
+        Display.getDisplay(this).setCurrent(new MapView());
     }
 
     public void pauseApp() {
