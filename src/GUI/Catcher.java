@@ -7,13 +7,11 @@
 
 package GUI;
 
-import System.IEventHandler;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 
 
-public class Catcher extends MIDlet {
+public class Catcher extends MIDlet implements IViewNavigator {
 
     private MapView mapView = null;
     private CacheView cacheView = null;
@@ -21,25 +19,11 @@ public class Catcher extends MIDlet {
 
     public void startApp() {
 
-        IEventHandler nextHandler = new IEventHandler()
-        {
-            public void executeHandler(Object sender, Object tag) {
-                ShowNext((Canvas)sender);
-            }
-        };
+        mapView = new MapView(this);
+        cacheView = new CacheView(this);
+        cacheListView = new CacheListView(this);
 
-        IEventHandler prevHandler = new IEventHandler()
-        {
-            public void executeHandler(Object sender, Object tag) {
-                ShowPrevious((Canvas)sender);
-            }
-        };
-
-        mapView = new MapView(prevHandler, nextHandler);
-        cacheView = new CacheView(prevHandler, nextHandler);
-        cacheListView = new CacheListView(prevHandler, nextHandler);
-
-        Display.getDisplay(this).setCurrent(cacheListView);
+        display().setCurrent(cacheListView);
     }
 
     public void pauseApp() {
@@ -48,35 +32,46 @@ public class Catcher extends MIDlet {
     public void destroyApp(boolean unconditional) {
     }
 
-    public void ShowNext(Canvas current)
+    public void ShowNext(IView current)
     {
+        current.deactivate();
+
         if (current == mapView)
         {
-            Display.getDisplay(this).setCurrent(cacheListView);
+            display().setCurrent(cacheListView);
+            cacheListView.activate();
         }
         else if (current == cacheListView)
         {
-            Display.getDisplay(this).setCurrent(cacheView);
+            display().setCurrent(cacheView);
+            cacheView.activate();
         }
         else if (current == cacheView)
         {
-            Display.getDisplay(this).setCurrent(mapView);
+            display().setCurrent(mapView);
+            mapView.activate();
         }
     }
 
-    public void ShowPrevious(Canvas current)
+    public void ShowPrevious(IView current)
     {
         if (current == mapView)
         {
-            Display.getDisplay(this).setCurrent(cacheView);
+            display().setCurrent(cacheView);
         }
         else if (current == cacheView)
         {
-            Display.getDisplay(this).setCurrent(cacheListView);
+            display().setCurrent(cacheListView);
         }
         else if (current == cacheListView)
         {
-            Display.getDisplay(this).setCurrent(mapView);
+            display().setCurrent(mapView);
         }
     }
+
+    private Display display()
+    {
+        return Display.getDisplay(this);
+    }
+
 }

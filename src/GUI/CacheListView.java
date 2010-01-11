@@ -7,24 +7,19 @@
 
 package GUI;
 
-import System.IEventHandler;
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
 
-/**
- * @author tc
- */
-public class CacheListView extends Canvas {
+public class CacheListView extends Canvas implements IView {
 
-    private IEventHandler showNextView;
-    private IEventHandler showPreviousView;
+    private IViewNavigator viewNavigator;
 
     /**
      * constructor
      */
-    public CacheListView(IEventHandler showPreviousView, IEventHandler showNextView) {
+    public CacheListView(IViewNavigator viewNavigator) {
         setFullScreenMode(true);
-        this.showPreviousView = showPreviousView;
-        this.showNextView = showNextView;
+        this.viewNavigator = viewNavigator;
     }
     
     /**
@@ -44,10 +39,10 @@ public class CacheListView extends Canvas {
     protected  void keyPressed(int keyCode) {
         switch(getGameAction(keyCode)) {
             case LEFT:
-                showPreviousView.executeHandler(this, null);
+                viewNavigator.ShowPrevious(this);
                 break;
             case RIGHT:
-                showNextView.executeHandler(this, null);
+                viewNavigator.ShowNext(this);
                 break;
         }
     }
@@ -80,6 +75,14 @@ public class CacheListView extends Canvas {
      * Called when the pointer is released.
      */
     protected  void pointerReleased(int x, int y) {
+    }
+
+    public void activate() {
+        
+    }
+
+    public void deactivate() {
+        
     }
 
 }
