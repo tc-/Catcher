@@ -15,15 +15,15 @@ public class Catcher extends MIDlet implements IViewNavigator {
 
     private MapView mapView = null;
     private CacheView cacheView = null;
-    private CacheListView cacheListView = null;
+    private CompassView compassView = null;
 
     public void startApp() {
 
         mapView = new MapView(this);
         cacheView = new CacheView(this);
-        cacheListView = new CacheListView(this);
+        compassView = new CompassView(this);
 
-        display().setCurrent(cacheListView);
+        display().setCurrent(mapView);
     }
 
     public void pauseApp() {
@@ -38,10 +38,10 @@ public class Catcher extends MIDlet implements IViewNavigator {
 
         if (current == mapView)
         {
-            display().setCurrent(cacheListView);
-            cacheListView.activate();
+            display().setCurrent(compassView);
+            compassView.activate();
         }
-        else if (current == cacheListView)
+        else if (current == compassView)
         {
             display().setCurrent(cacheView);
             cacheView.activate();
@@ -55,17 +55,21 @@ public class Catcher extends MIDlet implements IViewNavigator {
 
     public void ShowPrevious(IView current)
     {
+        current.deactivate();
         if (current == mapView)
         {
             display().setCurrent(cacheView);
+            cacheView.activate();
         }
         else if (current == cacheView)
         {
-            display().setCurrent(cacheListView);
+            Display.getDisplay(this).setCurrent(compassView);
+            compassView.activate();
         }
-        else if (current == cacheListView)
+        else if (current == compassView)
         {
             display().setCurrent(mapView);
+            mapView.activate();
         }
     }
 
