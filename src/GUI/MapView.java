@@ -15,6 +15,8 @@ import javax.microedition.lcdui.Displayable;
 
 public class MapView extends Canvas implements CommandListener {
 
+    private String msg = "Greetings Catcher";
+
     private IEventHandler showNextView;
     private IEventHandler showPreviousView;
 
@@ -22,18 +24,7 @@ public class MapView extends Canvas implements CommandListener {
      * constructor
      */
     public MapView(IEventHandler showPreviousView, IEventHandler showNextView) {
-
-        this.showNextView = showNextView;
-        this.showPreviousView = showPreviousView;
-
-        try {
-	    // Set up this canvas to listen to command events
-	    setCommandListener(this);
-	    // Add the Exit command
-	    addCommand(new Command("Exit", Command.EXIT, 1));
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        setFullScreenMode(true);
     } 
     
     /**
@@ -43,13 +34,36 @@ public class MapView extends Canvas implements CommandListener {
         g.setColor(255, 255, 255);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(0, 0, 0);
-        g.drawString("Sample Text",0,0,Graphics.TOP|Graphics.LEFT);
+        g.drawString(this.msg,0,0,Graphics.TOP|Graphics.LEFT);
     }
     
     /**
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
+        switch(keyCode) {
+            case GAME_A: this.msg="game_a";break;
+            case GAME_B: this.msg="game_b";break;
+            case GAME_C: this.msg="game_c";break;
+            case GAME_D: this.msg="game_d";break;
+            case UP: this.msg="up";break;
+            case DOWN: this.msg="down";break;
+            case LEFT: this.msg="left";break;
+            case RIGHT: this.msg="right";break;
+            case FIRE: this.msg="fire";break;
+            case KEY_NUM0: this.msg="0";break;
+            case KEY_NUM1: this.msg="1";break;
+            case KEY_NUM2: this.msg="2";break;
+            case KEY_NUM3: this.msg="3";break;
+            case KEY_NUM4: this.msg="4";break;
+            case KEY_NUM5: this.msg="5";break;
+            case KEY_NUM6: this.msg="6";break;
+            case KEY_NUM7: this.msg="7";break;
+            case KEY_NUM8: this.msg="8";break;
+            case KEY_NUM9: this.msg="9";break;
+            default: this.msg = "Unknown: "+String.valueOf(keyCode);
+        }
+        this.repaint();
     }
     
     /**
@@ -86,6 +100,8 @@ public class MapView extends Canvas implements CommandListener {
      * Called when action should be handled
      */
     public void commandAction(Command command, Displayable displayable) {
+        msg = "Command"+command.getLabel();
+        repaint();
     }
 
 }
