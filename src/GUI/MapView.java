@@ -25,6 +25,8 @@ public class MapView extends Canvas implements CommandListener {
      */
     public MapView(IEventHandler showPreviousView, IEventHandler showNextView) {
         setFullScreenMode(true);
+        this.showPreviousView = showPreviousView;
+        this.showNextView = showNextView;
     } 
     
     /**
@@ -34,7 +36,8 @@ public class MapView extends Canvas implements CommandListener {
         g.setColor(255, 255, 255);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(0, 0, 0);
-        g.drawString(this.msg,0,0,Graphics.TOP|Graphics.LEFT);
+        g.drawString("MapView",0,0,Graphics.TOP|Graphics.LEFT);
+        g.drawString(this.msg,0,20,Graphics.TOP|Graphics.LEFT);
     }
     
     /**
@@ -48,8 +51,16 @@ public class MapView extends Canvas implements CommandListener {
             case GAME_D: this.msg="game_d";break;
             case UP: this.msg="up";break;
             case DOWN: this.msg="down";break;
-            case LEFT: this.msg="left";break;
-            case RIGHT: this.msg="right";break;
+            case LEFT:
+            case -3:
+                this.msg="left";
+                showPreviousView.executeHandler(this, null);
+                break;
+            case RIGHT:
+            case -4:
+                this.msg="right";
+                showNextView.executeHandler(this, null);
+                break;
             case FIRE: this.msg="fire";break;
             case KEY_NUM0: this.msg="0";break;
             case KEY_NUM1: this.msg="1";break;

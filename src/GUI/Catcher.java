@@ -12,23 +12,31 @@ import javax.microedition.midlet.MIDlet;
 
 
 public class Catcher extends MIDlet {
+
+
+    private MapView mapView = null;
+    private CacheListView cacheListView = null;
+
     public void startApp() {
 
         IEventHandler nextHandler = new IEventHandler()
         {
-            public void executeHandler(Object sender) {
+            public void executeHandler(Object sender, Object tag) {
                 ShowNext((Canvas)sender);
             }
         };
 
         IEventHandler prevHandler = new IEventHandler()
         {
-            public void executeHandler(Object sender) {
-                ShowNext((Canvas)sender);
+            public void executeHandler(Object sender, Object tag) {
+                ShowPrevious((Canvas)sender);
             }
         };
 
-        Display.getDisplay(this).setCurrent(new MapView(nextHandler, prevHandler));
+        mapView = new MapView(prevHandler, nextHandler);
+        cacheListView = new CacheListView(prevHandler, nextHandler);
+
+        Display.getDisplay(this).setCurrent(mapView);
     }
 
     public void pauseApp() {
@@ -39,6 +47,25 @@ public class Catcher extends MIDlet {
 
     public void ShowNext(Canvas current)
     {
+        if (current == mapView)
+        {
+            Display.getDisplay(this).setCurrent(cacheListView);
+        }
+        else if (current == cacheListView)
+        {
+            Display.getDisplay(this).setCurrent(mapView);
+        }
+    }
 
+    public void ShowPrevious(Canvas current)
+    {
+        if (current == mapView)
+        {
+            Display.getDisplay(this).setCurrent(cacheListView);
+        }
+        else if (current == cacheListView)
+        {
+            Display.getDisplay(this).setCurrent(mapView);
+        }
     }
 }

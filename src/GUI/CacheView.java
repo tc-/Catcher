@@ -5,31 +5,34 @@
 
 package GUI;
 
+import System.IEventHandler;
 import javax.microedition.lcdui.*;
 
 /**
  * @author tc
  */
-public class CacheView extends Canvas implements CommandListener {
+public class CacheView extends Canvas {
+
+    private IEventHandler showNextView;
+    private IEventHandler showPreviousView;
+
     /**
      * constructor
      */
-    public CacheView() {
-        try {
-	    // Set up this canvas to listen to command events
-	    setCommandListener(this);
-	    // Add the Exit command
-	    addCommand(new Command("Exit", Command.EXIT, 1));
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    } 
+    public CacheView(IEventHandler showPreviousView, IEventHandler showNextView) {
+        setFullScreenMode(true);
+        this.showPreviousView = showPreviousView;
+        this.showNextView = showNextView;
+    }
     
     /**
      * paint
      */
     public void paint(Graphics g) {
-        g.drawString("Sample Text",0,0,Graphics.TOP|Graphics.LEFT);
+        g.setColor(255, 255, 255);
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(0, 0, 0);
+        g.drawString("CacheView",0,0,Graphics.TOP|Graphics.LEFT);
     }
     
     /**
@@ -66,12 +69,6 @@ public class CacheView extends Canvas implements CommandListener {
      * Called when the pointer is released.
      */
     protected  void pointerReleased(int x, int y) {
-    }
-    
-    /**
-     * Called when action should be handled
-     */
-    public void commandAction(Command command, Displayable displayable) {
     }
 
 }

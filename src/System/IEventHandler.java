@@ -7,5 +7,5 @@ package System;
 
 
 public interface IEventHandler {
-    void executeHandler(Object sender);
+    void executeHandler(Object sender, Object tag);
 }
