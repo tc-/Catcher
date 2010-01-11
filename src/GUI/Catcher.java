@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher, Catcher.java
+ *
+ * License: GPL v2
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package GUI;
@@ -13,8 +15,8 @@ import javax.microedition.midlet.MIDlet;
 
 public class Catcher extends MIDlet {
 
-
     private MapView mapView = null;
+    private CacheView cacheView = null;
     private CacheListView cacheListView = null;
 
     public void startApp() {
@@ -34,9 +36,10 @@ public class Catcher extends MIDlet {
         };
 
         mapView = new MapView(prevHandler, nextHandler);
+        cacheView = new CacheView(prevHandler, nextHandler);
         cacheListView = new CacheListView(prevHandler, nextHandler);
 
-        Display.getDisplay(this).setCurrent(mapView);
+        Display.getDisplay(this).setCurrent(cacheListView);
     }
 
     public void pauseApp() {
@@ -53,6 +56,10 @@ public class Catcher extends MIDlet {
         }
         else if (current == cacheListView)
         {
+            Display.getDisplay(this).setCurrent(cacheView);
+        }
+        else if (current == cacheView)
+        {
             Display.getDisplay(this).setCurrent(mapView);
         }
     }
@@ -60,6 +67,10 @@ public class Catcher extends MIDlet {
     public void ShowPrevious(Canvas current)
     {
         if (current == mapView)
+        {
+            Display.getDisplay(this).setCurrent(cacheView);
+        }
+        else if (current == cacheView)
         {
             Display.getDisplay(this).setCurrent(cacheListView);
         }

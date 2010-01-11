@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher, CacheView.java
+ *
+ * License: GPL v2
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package GUI;
@@ -39,6 +41,14 @@ public class CacheView extends Canvas {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
+        switch(getGameAction(keyCode)) {
+            case LEFT:
+                showPreviousView.executeHandler(this, null);
+                break;
+            case RIGHT:
+                showNextView.executeHandler(this, null);
+                break;
+        }
     }
     
     /**

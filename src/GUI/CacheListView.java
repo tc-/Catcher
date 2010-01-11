@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher, CacheListView.java
+ *
+ * License: GPL v2
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package GUI;
@@ -40,14 +42,11 @@ public class CacheListView extends Canvas {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        switch(keyCode) {
-
+        switch(getGameAction(keyCode)) {
             case LEFT:
-            case -3:
                 showPreviousView.executeHandler(this, null);
                 break;
             case RIGHT:
-            case -4:
                 showNextView.executeHandler(this, null);
                 break;
         }

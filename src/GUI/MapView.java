@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher, MapView.java
+ *
+ * License: GPL v2
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package GUI;
@@ -44,35 +46,36 @@ public class MapView extends Canvas implements CommandListener {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        switch(keyCode) {
-            case GAME_A: this.msg="game_a";break;
-            case GAME_B: this.msg="game_b";break;
-            case GAME_C: this.msg="game_c";break;
-            case GAME_D: this.msg="game_d";break;
-            case UP: this.msg="up";break;
-            case DOWN: this.msg="down";break;
+        switch(getGameAction(keyCode)) {
+            case GAME_A: msg="game_a";break;
+            case GAME_B: msg="game_b";break;
+            case GAME_C: msg="game_c";break;
+            case GAME_D: msg="game_d";break;
+            case UP: msg="game_up";break;
+            case DOWN: msg="game_down";break;
             case LEFT:
-            case -3:
-                this.msg="left";
+                msg="game_left";
                 showPreviousView.executeHandler(this, null);
                 break;
             case RIGHT:
-            case -4:
-                this.msg="right";
+                msg="game_right";
                 showNextView.executeHandler(this, null);
                 break;
-            case FIRE: this.msg="fire";break;
-            case KEY_NUM0: this.msg="0";break;
-            case KEY_NUM1: this.msg="1";break;
-            case KEY_NUM2: this.msg="2";break;
-            case KEY_NUM3: this.msg="3";break;
-            case KEY_NUM4: this.msg="4";break;
-            case KEY_NUM5: this.msg="5";break;
-            case KEY_NUM6: this.msg="6";break;
-            case KEY_NUM7: this.msg="7";break;
-            case KEY_NUM8: this.msg="8";break;
-            case KEY_NUM9: this.msg="9";break;
-            default: this.msg = "Unknown: "+String.valueOf(keyCode);
+            case FIRE: msg="game_fire";break;
+            default:
+                switch(keyCode) {
+                    case KEY_NUM0: msg="0";break;
+                    case KEY_NUM1: msg="1";break;
+                    case KEY_NUM2: msg="2";break;
+                    case KEY_NUM3: msg="3";break;
+                    case KEY_NUM4: msg="4";break;
+                    case KEY_NUM5: msg="5";break;
+                    case KEY_NUM6: msg="6";break;
+                    case KEY_NUM7: msg="7";break;
+                    case KEY_NUM8: msg="8";break;
+                    case KEY_NUM9: msg="9";break;
+                    default: msg = "Unknown: "+String.valueOf(keyCode);
+                }
         }
         this.repaint();
     }
@@ -111,8 +114,6 @@ public class MapView extends Canvas implements CommandListener {
      * Called when action should be handled
      */
     public void commandAction(Command command, Displayable displayable) {
-        msg = "Command"+command.getLabel();
-        repaint();
     }
 
 }
