@@ -15,16 +15,11 @@ import javax.microedition.lcdui.*;
  */
 public class CacheListView extends Canvas {
 
-    private IEventHandler showNextView;
-    private IEventHandler showPreviousView;
-
     /**
      * constructor
      */
-    public CacheListView(IEventHandler showPreviousView, IEventHandler showNextView) {
+    public CacheListView() {
         setFullScreenMode(true);
-        this.showPreviousView = showPreviousView;
-        this.showNextView = showNextView;
     }
     
     /**
@@ -35,21 +30,12 @@ public class CacheListView extends Canvas {
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(0, 0, 0);
         g.drawString("CacheListView",0,0,Graphics.TOP|Graphics.LEFT);
-
     }
     
     /**
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        switch(getGameAction(keyCode)) {
-            case LEFT:
-                showPreviousView.executeHandler(this, null);
-                break;
-            case RIGHT:
-                showNextView.executeHandler(this, null);
-                break;
-        }
     }
     
     /**

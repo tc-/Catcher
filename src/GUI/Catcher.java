@@ -17,7 +17,8 @@ public class Catcher extends MIDlet {
 
     private MapView mapView = null;
     private CacheView cacheView = null;
-    private CacheListView cacheListView = null;
+    private CompassView compassView = null;
+//    private CacheListView cacheListView = null;
 
     public void startApp() {
 
@@ -37,9 +38,10 @@ public class Catcher extends MIDlet {
 
         mapView = new MapView(prevHandler, nextHandler);
         cacheView = new CacheView(prevHandler, nextHandler);
-        cacheListView = new CacheListView(prevHandler, nextHandler);
+        compassView = new CompassView(prevHandler, nextHandler);
+//      cacheListView = new CacheListView(prevHandler, nextHandler);
 
-        Display.getDisplay(this).setCurrent(cacheListView);
+        Display.getDisplay(this).setCurrent(mapView);
     }
 
     public void pauseApp() {
@@ -52,9 +54,9 @@ public class Catcher extends MIDlet {
     {
         if (current == mapView)
         {
-            Display.getDisplay(this).setCurrent(cacheListView);
+            Display.getDisplay(this).setCurrent(compassView);
         }
-        else if (current == cacheListView)
+        else if (current == compassView)
         {
             Display.getDisplay(this).setCurrent(cacheView);
         }
@@ -72,9 +74,9 @@ public class Catcher extends MIDlet {
         }
         else if (current == cacheView)
         {
-            Display.getDisplay(this).setCurrent(cacheListView);
+            Display.getDisplay(this).setCurrent(compassView);
         }
-        else if (current == cacheListView)
+        else if (current == compassView)
         {
             Display.getDisplay(this).setCurrent(mapView);
         }
