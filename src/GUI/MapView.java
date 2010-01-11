@@ -5,16 +5,27 @@
 
 package GUI;
 
-import javax.microedition.lcdui.*;
+import System.IEventHandler;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Command;
+import javax.microedition.lcdui.CommandListener;
+import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Displayable;
 
-/**
- * @author tc
- */
+
 public class MapView extends Canvas implements CommandListener {
+
+    private IEventHandler showNextView;
+    private IEventHandler showPreviousView;
+
     /**
      * constructor
      */
-    public MapView() {
+    public MapView(IEventHandler showPreviousView, IEventHandler showNextView) {
+
+        this.showNextView = showNextView;
+        this.showPreviousView = showPreviousView;
+
         try {
 	    // Set up this canvas to listen to command events
 	    setCommandListener(this);

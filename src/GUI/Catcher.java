@@ -5,20 +5,40 @@
 
 package GUI;
 
+import System.IEventHandler;
+import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Display;
-import javax.microedition.midlet.*;
+import javax.microedition.midlet.MIDlet;
 
-/**
- * @author tc
- */
+
 public class Catcher extends MIDlet {
     public void startApp() {
-        Display.getDisplay(this).setCurrent(new MapView());
+
+        IEventHandler nextHandler = new IEventHandler()
+        {
+            public void executeHandler(Object sender) {
+                ShowNext((Canvas)sender);
+            }
+        };
+
+        IEventHandler prevHandler = new IEventHandler()
+        {
+            public void executeHandler(Object sender) {
+                ShowNext((Canvas)sender);
+            }
+        };
+
+        Display.getDisplay(this).setCurrent(new MapView(nextHandler, prevHandler));
     }
 
     public void pauseApp() {
     }
 
     public void destroyApp(boolean unconditional) {
+    }
+
+    public void ShowNext(Canvas current)
+    {
+
     }
 }
