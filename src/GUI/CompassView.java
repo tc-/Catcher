@@ -9,6 +9,7 @@ package GUI;
 
 import System.IEventHandler;
 import javax.microedition.lcdui.*;
+import java.lang.Math;
 
 /**
  * @author richie
@@ -46,7 +47,11 @@ public class CompassView extends Canvas implements CommandListener {
 
         int x1,x2,y1,y2;
 
-        x1=x2=y1=y2=0; // remove
+        x1 = maxX >> 1;
+        x2 = (int)Math.sin(10)*100;
+        y1 = maxX >> 1;
+        y2 = (int)Math.cos(10)*100;
+//        x1=x2=y1=y2=0; // remove
 
         g.drawLine(x1, y1, x2, y2);
     }
