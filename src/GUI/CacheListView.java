@@ -7,19 +7,19 @@
 
 package GUI;
 
-import System.IEventHandler;
-import javax.microedition.lcdui.*;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
 
-/**
- * @author tc
- */
-public class CacheListView extends Canvas {
+public class CacheListView extends Canvas implements IView {
+
+    private IViewNavigator viewNavigator;
 
     /**
      * constructor
      */
-    public CacheListView() {
+    public CacheListView(IViewNavigator viewNavigator) {
         setFullScreenMode(true);
+        this.viewNavigator = viewNavigator;
     }
     
     /**
@@ -36,6 +36,14 @@ public class CacheListView extends Canvas {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
+        switch(getGameAction(keyCode)) {
+            case LEFT:
+                viewNavigator.ShowPrevious(this);
+                break;
+            case RIGHT:
+                viewNavigator.ShowNext(this);
+                break;
+        }
     }
     
     /**
@@ -66,6 +74,14 @@ public class CacheListView extends Canvas {
      * Called when the pointer is released.
      */
     protected  void pointerReleased(int x, int y) {
+    }
+
+    public void activate() {
+        
+    }
+
+    public void deactivate() {
+        
     }
 
 }

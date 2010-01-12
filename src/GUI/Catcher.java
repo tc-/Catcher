@@ -7,41 +7,23 @@
 
 package GUI;
 
-import System.IEventHandler;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 
 
-public class Catcher extends MIDlet {
+public class Catcher extends MIDlet implements IViewNavigator {
 
     private MapView mapView = null;
     private CacheView cacheView = null;
     private CompassView compassView = null;
-//    private CacheListView cacheListView = null;
 
     public void startApp() {
 
-        IEventHandler nextHandler = new IEventHandler()
-        {
-            public void executeHandler(Object sender, Object tag) {
-                ShowNext((Canvas)sender);
-            }
-        };
+        mapView = new MapView(this);
+        cacheView = new CacheView(this);
+        compassView = new CompassView(this);
 
-        IEventHandler prevHandler = new IEventHandler()
-        {
-            public void executeHandler(Object sender, Object tag) {
-                ShowPrevious((Canvas)sender);
-            }
-        };
-
-        mapView = new MapView(prevHandler, nextHandler);
-        cacheView = new CacheView(prevHandler, nextHandler);
-        compassView = new CompassView(prevHandler, nextHandler);
-//      cacheListView = new CacheListView(prevHandler, nextHandler);
-
-        Display.getDisplay(this).setCurrent(mapView);
+        display().setCurrent(mapView);
     }
 
     public void pauseApp() {
@@ -50,35 +32,50 @@ public class Catcher extends MIDlet {
     public void destroyApp(boolean unconditional) {
     }
 
-    public void ShowNext(Canvas current)
+    public void ShowNext(IView current)
     {
+        current.deactivate();
+
         if (current == mapView)
         {
-            Display.getDisplay(this).setCurrent(compassView);
+            display().setCurrent(compassView);
+            compassView.activate();
         }
         else if (current == compassView)
         {
-            Display.getDisplay(this).setCurrent(cacheView);
+            display().setCurrent(cacheView);
+            cacheView.activate();
         }
         else if (current == cacheView)
         {
-            Display.getDisplay(this).setCurrent(mapView);
+            display().setCurrent(mapView);
+            mapView.activate();
         }
     }
 
-    public void ShowPrevious(Canvas current)
+    public void ShowPrevious(IView current)
     {
+        current.deactivate();
         if (current == mapView)
         {
-            Display.getDisplay(this).setCurrent(cacheView);
+            display().setCurrent(cacheView);
+            cacheView.activate();
         }
         else if (current == cacheView)
         {
             Display.getDisplay(this).setCurrent(compassView);
+            compassView.activate();
         }
         else if (current == compassView)
         {
-            Display.getDisplay(this).setCurrent(mapView);
+            display().setCurrent(mapView);
+            mapView.activate();
         }
     }
+
+    private Display display()
+    {
+        return Display.getDisplay(this);
+    }
+
 }

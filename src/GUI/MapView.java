@@ -7,28 +7,23 @@
 
 package GUI;
 
-import System.IEventHandler;
 import javax.microedition.lcdui.Canvas;
-import javax.microedition.lcdui.Command;
-import javax.microedition.lcdui.CommandListener;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Displayable;
 
 
-public class MapView extends Canvas implements CommandListener {
+
+public class MapView extends Canvas implements IView {
 
     private String msg = "Greetings Catcher";
 
-    private IEventHandler showNextView;
-    private IEventHandler showPreviousView;
+    private IViewNavigator viewNavigator;
 
     /**
      * constructor
      */
-    public MapView(IEventHandler showPreviousView, IEventHandler showNextView) {
+    public MapView(IViewNavigator viewNavigator) {
         setFullScreenMode(true);
-        this.showPreviousView = showPreviousView;
-        this.showNextView = showNextView;
+        this.viewNavigator = viewNavigator;
     } 
     
     /**
@@ -55,11 +50,11 @@ public class MapView extends Canvas implements CommandListener {
             case DOWN: msg="game_down";break;
             case LEFT:
                 msg="game_left";
-                showPreviousView.executeHandler(this, null);
+                viewNavigator.ShowPrevious(this);
                 break;
             case RIGHT:
                 msg="game_right";
-                showNextView.executeHandler(this, null);
+                viewNavigator.ShowNext(this);
                 break;
             case FIRE: msg="game_fire";break;
             default:
@@ -109,11 +104,13 @@ public class MapView extends Canvas implements CommandListener {
      */
     protected  void pointerReleased(int x, int y) {
     }
-    
-    /**
-     * Called when action should be handled
-     */
-    public void commandAction(Command command, Displayable displayable) {
+
+    public void activate() {
+        
+    }
+
+    public void deactivate() {
+
     }
 
 }

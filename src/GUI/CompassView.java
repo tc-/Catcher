@@ -7,25 +7,23 @@
 
 package GUI;
 
-import System.IEventHandler;
-import javax.microedition.lcdui.*;
-import java.lang.Math;
+import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Graphics;
+
 
 /**
  * @author richie
  */
-public class CompassView extends Canvas implements CommandListener {
+public class CompassView extends Canvas implements IView {
 
-    private IEventHandler showNextView;
-    private IEventHandler showPreviousView;
+    private IViewNavigator viewNavigator;
 
     /**
      * constructor
      */
-    public CompassView(IEventHandler showPreviousView, IEventHandler showNextView) {
+    public CompassView(IViewNavigator viewNavigator) {
         setFullScreenMode(true);
-        this.showPreviousView = showPreviousView;
-        this.showNextView = showNextView;
+        this.viewNavigator = viewNavigator;
     } 
     
     /**
@@ -38,7 +36,7 @@ public class CompassView extends Canvas implements CommandListener {
         g.drawString("CompassView",0,0,Graphics.TOP|Graphics.LEFT);
         
         // Draw compass
-        int bearing = 0;
+        //int bearing = 0;
         int maxX = getWidth();
         int maxY = getHeight();
         int compassDia = (maxX<maxY ? maxX:maxY)-10;
@@ -62,10 +60,10 @@ public class CompassView extends Canvas implements CommandListener {
     protected  void keyPressed(int keyCode) {
         switch(getGameAction(keyCode)) {
             case LEFT:
-                showPreviousView.executeHandler(this, null);
+                viewNavigator.ShowPrevious(this);
                 break;
             case RIGHT:
-                showNextView.executeHandler(this, null);
+                viewNavigator.ShowNext(this);
                 break;
         }
     }
@@ -99,11 +97,13 @@ public class CompassView extends Canvas implements CommandListener {
      */
     protected  void pointerReleased(int x, int y) {
     }
-    
-    /**
-     * Called when action should be handled
-     */
-    public void commandAction(Command command, Displayable displayable) {
+
+    public void activate() {
+
     }
 
+    public void deactivate() {
+
+    }
+    
 }
