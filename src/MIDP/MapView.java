@@ -5,8 +5,9 @@
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
-package GUI;
+package MIDP;
 
+import GUI.*;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
@@ -50,11 +51,11 @@ public class MapView extends Canvas implements IView {
             case DOWN: msg="game_down";break;
             case LEFT:
                 msg="game_left";
-                viewNavigator.ShowPrevious(this);
+                viewNavigator.ShowPrevious();
                 break;
             case RIGHT:
                 msg="game_right";
-                viewNavigator.ShowNext(this);
+                viewNavigator.ShowNext();
                 break;
             case FIRE: msg="game_fire";break;
             default:

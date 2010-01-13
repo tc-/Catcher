@@ -5,11 +5,10 @@
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
-package GUI;
 
-public interface IViewNavigator {
+package System;
 
-    void ShowNext();
-    void ShowPrevious();
-    
+
+public class Direction {
+
 }

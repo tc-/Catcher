@@ -1,23 +1,28 @@
 /*
- * Catcher, CacheListView.java
+ * Catcher, CacheView.java
  *
  * License: GPL v2
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
-package GUI;
+package MIDP;
 
+import GUI.*;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
-public class CacheListView extends Canvas implements IView {
+
+/**
+ * @author tc
+ */
+public class CacheView extends Canvas implements IView {
 
     private IViewNavigator viewNavigator;
 
     /**
      * constructor
      */
-    public CacheListView(IViewNavigator viewNavigator) {
+    public CacheView(IViewNavigator viewNavigator) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
     }
@@ -29,7 +34,7 @@ public class CacheListView extends Canvas implements IView {
         g.setColor(255, 255, 255);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(0, 0, 0);
-        g.drawString("CacheListView",0,0,Graphics.TOP|Graphics.LEFT);
+        g.drawString("CacheView",0,0,Graphics.TOP|Graphics.LEFT);
     }
     
     /**
@@ -38,10 +43,10 @@ public class CacheListView extends Canvas implements IView {
     protected  void keyPressed(int keyCode) {
         switch(getGameAction(keyCode)) {
             case LEFT:
-                viewNavigator.ShowPrevious(this);
+                viewNavigator.ShowPrevious();
                 break;
             case RIGHT:
-                viewNavigator.ShowNext(this);
+                viewNavigator.ShowNext();
                 break;
         }
     }
