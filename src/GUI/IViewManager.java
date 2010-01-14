@@ -13,9 +13,9 @@ public interface IViewManager {
     void setCurrent(IView view);
     IView getCurrent();
 
-    IView getCacheView();
-    IView getCacheListView();
+    ICacheView getCacheView();
+    ICacheListView getCacheListView();
     ICompassView getCompassView();
-    IView getMapView();
+    IMapView getMapView();
 
 }

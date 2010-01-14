@@ -8,7 +8,10 @@
 package MIDP;
 
 import GUI.CatcherMain;
+import GUI.ICacheListView;
+import GUI.ICacheView;
 import GUI.ICompassView;
+import GUI.IMapView;
 import GUI.IView;
 import GUI.IViewManager;
 import javax.microedition.lcdui.Display;
@@ -58,19 +61,19 @@ public class CatcherMIDP extends MIDlet implements IViewManager {
         return current;
     }
 
-    public IView getCacheView() {
+    public ICacheView getCacheView() {
         return new CacheView(main);
     }
 
-    public IView getCacheListView() {
-        return null;
+    public ICacheListView getCacheListView() {
+        return new CacheListView(main);
     }
 
     public ICompassView getCompassView() {
         return new CompassView(main);
     }
 
-    public IView getMapView() {
+    public IMapView getMapView() {
         return new MapView(main);
     }
 

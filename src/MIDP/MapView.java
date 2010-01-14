@@ -7,17 +7,39 @@
 
 package MIDP;
 
-import GUI.*;
+import GUI.IMapView;
+import GUI.IViewNavigator;
+import System.Position;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
 
 
-public class MapView extends Canvas implements IView {
+public class MapView extends Canvas implements IMapView {
 
     private String msg = "Greetings Catcher";
 
     private IViewNavigator viewNavigator;
+
+    private Position center;
+
+    private int zoom;
+
+    public Position getCenter() {
+        return center;
+    }
+
+    public void setCenter(Position center) {
+        this.center = center;
+    }
+
+    public int getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(int zoom) {
+        this.zoom = zoom;
+    }
 
     /**
      * constructor

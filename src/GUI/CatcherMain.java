@@ -12,9 +12,10 @@ public class CatcherMain implements IViewNavigator {
 
     private IViewManager views;
 
-    private IView mapView;
-    private IView cacheView;
+    private IMapView mapView;
+    private ICacheView cacheView;
     private ICompassView compassView;
+    private ICacheListView cacheListView;
 
     public CatcherMain(IViewManager views) {
         this.views = views;
@@ -24,7 +25,8 @@ public class CatcherMain implements IViewNavigator {
         mapView = views.getMapView();
         cacheView = views.getCacheView();
         compassView = views.getCompassView();
-
+        cacheListView = views.getCacheListView();
+        
         views.setCurrent(mapView);
     }
 
