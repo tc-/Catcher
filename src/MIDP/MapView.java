@@ -8,12 +8,15 @@
 package MIDP;
 
 import GUI.*;
+import java.util.Calendar;// For status bar
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
 
 
 public class MapView extends Canvas implements IView {
+
+    //private Calendar cal;
 
     private String msg = "Greetings Catcher";
 
@@ -27,15 +30,160 @@ public class MapView extends Canvas implements IView {
         this.viewNavigator = viewNavigator;
     } 
     
+    private static final int COLOR_OUTLINE = 0x000000;
+    private static final int COLOR_BACKGROUND = 0xffffff;
+    private static final int COLOR_TEXT = 0x000000;
+    private static final int COLOR_STATUSBAR_BG = 0xddddff;
+    private static final int COLOR_CACHELIST_BG = 0xddddff;
+    private static final int COLOR_COMPASS_BG = 0xffffff;
+
+    private static final int[] COLOR_LOG = {
+        0X00FF00,// LOG_FOUND
+        0XFFFF77,// LOG_DNF     Did Not find
+        0x7777ff,// LOG_NOTE
+        0x00aa00,// LOG_PUBLISHED
+        0xffff00,// LOG_MAINTENANCE
+        0x000000,// LOG_ARCHIVED
+        0xff0000 // LOG_DISABLED
+    };
+
+    private static final int LOG_FOUND = 0;
+    private static final int LOG_DNF = 1; // Did Not find
+    private static final int LOG_NOTE = 2;
+    private static final int LOG_PUBLISHED = 3;
+    private static final int LOG_MAINTENANCE = 4;
+    private static final int LOG_ARCHIVED = 5;
+    private static final int LOG_DISABLED = 6;
+
+    private static final int HEIGHT_STATUSBAR = 16;
+    private static final int HEIGHT_CACHELISTITEM = 16;
+
+    // Cache types (these might change. These are the currently supported on
+    // geocaching.com. opencaching has additional types, and more are added.)
+    private static final int CT_REGULAR=0;
+    private static final int CT_MYSTERY=1;// aka unknown
+    private static final int CT_UNKNOWN=1;
+    private static final int CT_MULTI=2;
+    private static final int CT_LETTERBOX=3;
+    private static final int CT_VIRTUAL=4;
+    private static final int CT_WHEREIGO=5;
+    private static final int CT_EVENT=6;
+    private static final int CT_WEBCAM=7;
+    private static final int CT_EARTH=8;
+    private static final int CT_CITO=9; // aka "Cache In Trash Out"
+    private static final int CT_MEGAEVENT=10;
+
+
+    // Screen orientation
+    private static final boolean PORTRAIT = true;
+    private static final boolean LANDSCAPE = false;
+
+    private boolean screenOrientation() {
+        return getHeight() > getWidth();
+    }
+
+    // Extend this to (optionally) take date as param.
+    private String getDateStr() {
+        Calendar cal = Calendar.getInstance();
+        int y = cal.get(Calendar.YEAR);
+        int m = cal.get(Calendar.MONTH)+1; // January = 0
+        int d = cal.get(Calendar.DAY_OF_MONTH);
+        String str = y+"-"+(m<10?"0":"")+m+"-"+(d<10?"0":"")+d;
+        return str;
+    }
+
+    // Extend this to (optionally) take date as param.
+    private String getTimeStr() {
+        Calendar cal = Calendar.getInstance();
+        int h = cal.get(Calendar.HOUR_OF_DAY); // 24-hour hour
+        int m = cal.get(Calendar.MINUTE);
+        String str = (h<10?"0":"")+h+":"+(m<10?"0":"")+m;
+        return str;
+    }
+
+    // Extend this to (optionally) take date as param.
+    private String getDateTimeStr() {
+        return getDateStr()+" / "+getTimeStr();
+    }
+
+    /*
+     * Draw statusbar with a stored graphic later, and add date and status icons
+     * for gps, battery, net and cell status.
+     */
+    private void paintStatusBar(Graphics g) {
+        if (screenOrientation() == PORTRAIT) {
+            int x1 = 0;
+            int y1 = getHeight()-HEIGHT_STATUSBAR;
+            int x2 = getWidth();
+            int y2 = getHeight();
+
+            g.setColor(COLOR_STATUSBAR_BG);
+            g.fillRect(x1, y1, x2, y2);
+            g.setColor(COLOR_OUTLINE);
+            g.drawLine(0, y1, x2, y1);
+            g.drawLine(30, y1, 30, y2);
+            g.drawLine(getWidth()-30, y1, x2-30, y2);
+            g.setColor(COLOR_TEXT);
+            g.drawString("VIEW", 15, y2, Graphics.HCENTER | Graphics.BOTTOM);
+            g.drawString("MENU", x2-15, y2, Graphics.HCENTER | Graphics.BOTTOM);
+            g.drawString(getDateTimeStr(), x2>>1, y2,
+                    Graphics.HCENTER | Graphics.BOTTOM);
+        } else {
+            // Put some effort here later.
+        }
+    }
+
+    private void paintSelectedCache(Graphics g) {
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = getWidth();
+        int y2 = HEIGHT_CACHELISTITEM;
+        int ht = HEIGHT_CACHELISTITEM;
+
+        g.setColor(COLOR_CACHELIST_BG);
+        g.fillRect(x1, y1, x2, y2);
+
+        // Tiny compass
+        g.setColor(COLOR_COMPASS_BG);
+        g.fillArc(x2-ht, y1, ht-1, ht-1, 0, 360); // off by one in wth/ht
+        g.setColor(COLOR_OUTLINE);
+        g.drawArc(x2-ht, y1, ht-1, ht-1, 0, 360);
+
+        // fake data until cache store is in place
+        String cacheName = "Under the bridge";
+        int cacheType = CT_REGULAR;
+
+        // GC.com currently has 9 levels, 1 to 5 in .5 increments. We represent
+        // them as 0-8 internally. Others might have different scales.
+        int terrain = 3;
+        int difficulty = 2;
+        int[] lastLogs = {0,2,0,1};
+
+        // Draws a set of squares to indicate cache health based on latest logs
+        for (int i=0;i<lastLogs.length;i++) {
+            g.setColor(COLOR_LOG[lastLogs[i]]);
+            g.fillRect(x1+16, y1+(i<<2), 4, 4);
+        }
+
+        g.setColor(COLOR_TEXT);
+        g.drawString(cacheName, x1+20, y1,
+                Graphics.LEFT | Graphics.TOP);
+    }
+
     /**
      * paint
      */
     public void paint(Graphics g) {
-        g.setColor(255, 255, 255);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(COLOR_BACKGROUND);
+        g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
+
+        paintStatusBar(g);
+        paintSelectedCache(g);
+
+
         g.setColor(0, 0, 0);
-        g.drawString("MapView",0,0,Graphics.TOP|Graphics.LEFT);
-        g.drawString(this.msg,0,20,Graphics.TOP|Graphics.LEFT);
+        g.drawString("MapView",0,40,Graphics.TOP|Graphics.LEFT);
+        g.drawString(this.msg,0,60,Graphics.TOP|Graphics.LEFT);
     }
     
     /**
