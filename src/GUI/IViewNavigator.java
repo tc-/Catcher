@@ -7,9 +7,20 @@
 
 package GUI;
 
+
+/**
+ * Provides navigation through the main views
+ */
 public interface IViewNavigator {
 
+    /**
+     * Show next main view
+     */
     void ShowNext();
+
+    /**
+     * Show previous main view
+     */
     void ShowPrevious();
     
 }

@@ -11,6 +11,9 @@ import System.Direction;
 import System.Position;
 
 
+/**
+ * Displays a compass
+ */
 public interface ICompassView extends IView {
 
     Direction getMyDirection();

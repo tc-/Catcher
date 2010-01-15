@@ -8,9 +8,19 @@
 package GUI;
 
 
+/**
+ * Interface implemented by all views
+ */
 public interface IView {
 
+    /**
+     * Run when view is displayed
+     */
     void activate();
+
+    /**
+     * Run when view is hidden
+     */
     void deactivate();
 
 }

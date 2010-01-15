@@ -7,7 +7,9 @@
 
 package MIDP;
 
-import GUI.*;
+import GUI.ICacheView;
+import GUI.IViewNavigator;
+import System.Cache;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
@@ -15,9 +17,19 @@ import javax.microedition.lcdui.Graphics;
 /**
  * @author tc
  */
-public class CacheView extends Canvas implements IView {
+public class CacheView extends Canvas implements ICacheView {
 
     private IViewNavigator viewNavigator;
+
+    private Cache cache;
+
+    public Cache getCache() {
+        return cache;
+    }
+
+    public void setCache(Cache cache) {
+        this.cache = cache;
+    }
 
     /**
      * constructor
