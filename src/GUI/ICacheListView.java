@@ -1,16 +1,16 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher, Catcher.java
+ *
+ * License: GPL v2
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package GUI;
 
-import GUI.IView;
 import System.Cache;
 
 /**
- *
- * @author tc
+ * Show a list of caches
  */
 public interface ICacheListView extends IView {
 

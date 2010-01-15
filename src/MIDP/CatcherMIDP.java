@@ -14,12 +14,18 @@ import GUI.ICompassView;
 import GUI.IMapView;
 import GUI.IView;
 import GUI.IViewManager;
+import System.ICacheProvider;
+import System.IImageLoader;
+import System.IMapProvider;
+import System.IPlatformManager;
+import System.IPositionProvider;
+import System.ISettingsProvider;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.midlet.MIDlet;
 
 
-public class CatcherMIDP extends MIDlet implements IViewManager {
+public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManager {
 
     private IView current = null;
     private CatcherMain main = null;
@@ -65,16 +71,32 @@ public class CatcherMIDP extends MIDlet implements IViewManager {
         return new CacheView(main);
     }
 
-    public ICacheListView getCacheListView() {
+    public ICacheListView getCacheListView(ICacheProvider cacheProvider, IPositionProvider positionProvider) {
         return new CacheListView(main);
     }
 
-    public ICompassView getCompassView() {
+    public ICompassView getCompassView(ICacheProvider cacheProvider, IPositionProvider positionProvider) {
         return new CompassView(main);
     }
 
-    public IMapView getMapView() {
+    public IMapView getMapView(ICacheProvider cacheProvider, IPositionProvider positionProvider, IMapProvider mapProvider) {
         return new MapView(main);
+    }
+
+    public IImageLoader getImageLoader() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public IPositionProvider getPositionProvider() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public ISettingsProvider getSettingsProvider() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public IViewManager getViewManager() {
+        return this;
     }
 
 }

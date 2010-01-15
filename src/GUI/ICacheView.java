@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher, MapView.java
+ *
+ * License: GPL v2
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package GUI;
@@ -8,13 +10,20 @@ package GUI;
 import System.Cache;
 
 /**
- *
- * @author tc
+ * Displays information about a single Cache
  */
 public interface ICacheView extends IView {
 
+    /**
+     * Get the currently selected Cache
+     * @return current Cache
+     */
     Cache getCache();
 
+    /**
+     * Set currently selected Cache
+     * @param cache new Cache
+     */
     void setCache(Cache cache);
 
 }

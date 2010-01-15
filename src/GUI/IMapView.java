@@ -1,16 +1,16 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher, Catcher.java
+ *
+ * License: GPL v2
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package GUI;
 
-import GUI.IView;
 import System.Position;
 
 /**
- *
- * @author tc
+ * Displays a map with caches
  */
 public interface IMapView extends IView {
 
