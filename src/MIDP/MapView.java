@@ -13,7 +13,10 @@ import System.Position;
 import java.util.Calendar;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
-
+import javax.microedition.lcdui.Image;
+//import javax.microedition.lcdui.ImageItem;
+import javax.microedition.lcdui.game.Sprite;
+import java.io.IOException;
 
 
 public class MapView extends Canvas implements IMapView {
@@ -98,6 +101,37 @@ public class MapView extends Canvas implements IMapView {
     private static final boolean PORTRAIT = true;
     private static final boolean LANDSCAPE = false;
 
+    private Image icons16x16;
+
+    // fixme: run this on init and remove this lousy comment
+    private void loadImages() {
+       try {
+           icons16x16 = Image.createImage("/icons16x16.png");
+       }
+       catch(IOException e) {
+           throw new RuntimeException("Load resource: "+e);
+       }
+    }
+
+    // Icon indexes
+    private static final int IC_COMPASS_OFFS = 0; // 0--7: 8 directions,
+                                                  // clockwise from north
+    private static final int IC_GPS_OK = 8;
+    private static final int IC_GPS_LIMITED = 9;
+    private static final int IC_GPS_OFF = 10;
+    private static final int IC_CROSSHAIR1 = 16;
+    private static final int IC_CROSSHAIR2 = 17;
+    private static final int IC_CACHES_OFFS = 32;
+
+    private Image getIcon(int index) {
+        // icons16x16 is expected to be 128px wide / 8 icons wide
+        int x = (index & 0x07) << 4; // index % 8 * 16
+        int y = (index & 0xf8) << 1; // index / 8 * 16
+        Image im = Image.createImage(icons16x16, x, y, 16, 16,
+                Sprite.TRANS_NONE);
+        return im;
+    }
+
     private boolean screenOrientation() {
         return getHeight() > getWidth();
     }
@@ -173,11 +207,14 @@ public class MapView extends Canvas implements IMapView {
         String cacheName = "Under the bridge";
         int cacheType = CT_REGULAR;
 
+
         // GC.com currently has 9 levels, 1 to 5 in .5 increments. We represent
         // them as 0-8 internally. Others might have different scales.
         int terrain = 3;
         int difficulty = 2;
         int[] lastLogs = {0,2,0,1};
+
+        g.drawImage(getIcon(IC_CACHES_OFFS+cacheType), x1, y1, 1);
 
         // Draws a set of squares to indicate cache health based on latest logs
         for (int i=0;i<lastLogs.length;i++) {
@@ -238,7 +275,8 @@ public class MapView extends Canvas implements IMapView {
                     case KEY_NUM7: msg="7";break;
                     case KEY_NUM8: msg="8";break;
                     case KEY_NUM9: msg="9";break;
-                    default: msg = "Unknown: "+String.valueOf(keyCode);
+                    default: msg = "Unknown ("+String.valueOf(keyCode)
+                            +") KeyName: "+getKeyName(keyCode);
                 }
         }
         this.repaint();
