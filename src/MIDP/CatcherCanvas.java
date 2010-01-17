@@ -1,6 +1,8 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Catcher
+ *
+ * License: GPL v3
+ * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 
 package MIDP;

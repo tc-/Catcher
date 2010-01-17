@@ -1,7 +1,7 @@
 /*
- * Catcher, CacheListView.java
+ * Catcher
  *
- * License: GPL v2
+ * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
 

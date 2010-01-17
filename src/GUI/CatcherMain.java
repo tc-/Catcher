@@ -1,5 +1,5 @@
 /*
- * Catcher, Catcher.java
+ * Catcher
  *
  * License: GPL v2
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com

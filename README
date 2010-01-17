@@ -1,1 +1,14 @@
-Catcher is a geocaching client for j2me devices.
+Catcher - Cache hunting client for j2me-capable phones.
+
+License: GPLv3
+
+Catcher aims to be a user friendly and efficient geocaching client with aim of 
+supporting all major caching sites (oc, gc, tc etc).
+
+Catcher includes the following third party code:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1.  MathUtil - a subset of akmemobile.
+    Author:	kmashint at dev.java.net
+    License:	Apache v2
+    WWW:	https://akmemobile.dev.java.net/
+-------------------------------------------------
