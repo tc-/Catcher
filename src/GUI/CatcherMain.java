@@ -11,7 +11,7 @@ import System.ICacheProvider;
 import System.IMapProvider;
 import System.IPlatformManager;
 import System.IPositionProvider;
-import System.ISettingsProvider;
+import System.SettingsManager;
 
 
 /**
@@ -36,7 +36,7 @@ public class CatcherMain implements IViewNavigator {
     public void start() {
         // Get platform implementations
         IViewManager views = platform.getViewManager();
-        ISettingsProvider sett = platform.getSettingsProvider();
+        SettingsManager sett = new SettingsManager(platform.getSettingsStore());
         ICacheProvider caches = sett.getCacheProvider();
         IPositionProvider pos = platform.getPositionProvider();
         IMapProvider maps = sett.getMapProvider();
