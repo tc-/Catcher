@@ -1,4 +1,4 @@
-package MIDP; //package akme.mobile.util;
+package System; //package akme.mobile.util;
 
 /*
  * Ported from the Sun Microsystems FDLIBM C-library.
