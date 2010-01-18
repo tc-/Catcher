@@ -19,7 +19,7 @@ import System.IImageLoader;
 import System.IMapProvider;
 import System.IPlatformManager;
 import System.IPositionProvider;
-import System.ISettingsProvider;
+import System.ISettingsStore;
 import javax.microedition.lcdui.Display;
 import javax.microedition.lcdui.Displayable;
 import javax.microedition.midlet.MIDlet;
@@ -29,6 +29,7 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
 
     private IView current = null;
     private CatcherMain main = null;
+    private MIDPSettingsStore settingsStore = null;
 
     public void startApp() {
         if (main == null) {
@@ -84,15 +85,16 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
     }
 
     public IImageLoader getImageLoader() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
     public IPositionProvider getPositionProvider() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
-    public ISettingsProvider getSettingsProvider() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ISettingsStore getSettingsStore() {
+        if (settingsStore == null) settingsStore = new MIDPSettingsStore();
+        return settingsStore;
     }
 
     public IViewManager getViewManager() {

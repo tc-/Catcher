@@ -28,10 +28,10 @@ public interface IPlatformManager {
     IPositionProvider getPositionProvider();
 
     /**
-     * Get ISettingsProvider to use in the applcation
-     * @return settings provider to use
+     * Get ISettingsStore to use in the applcation
+     * @return settings store to use
      */
-    ISettingsProvider getSettingsProvider();
+    ISettingsStore getSettingsStore();
 
     /**
      * Get IViewManager to use in the applcation
