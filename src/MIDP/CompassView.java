@@ -49,19 +49,19 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     /**
      * constructor
      */
-    public CompassView(IViewNavigator viewNavigator) {
+    public CompassView(IViewNavigator viewNavigator,
+            ViewResources viewResources) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
-
-        // fixme: This is not the right place to call loadImages();
-        loadImages();
+        this.viewResources = viewResources;
     }
 
     /*
      * Draws a circular compass
      * It's assumed that bearing and target are 0>n>360
      */
-    private void paintCompass(Graphics g, int bearing, int target, int x1, int y1, int x2, int y2) {
+    private void paintCompass(Graphics g, int bearing, int target, int x1,
+            int y1, int x2, int y2) {
 
         int dia = (x2 < y2? x2 : y2);
         int radius = dia >> 1;

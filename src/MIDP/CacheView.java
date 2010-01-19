@@ -10,7 +10,6 @@ package MIDP;
 import GUI.ICacheView;
 import GUI.IViewNavigator;
 import System.Cache;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
 
@@ -20,7 +19,6 @@ import javax.microedition.lcdui.Graphics;
 public class CacheView extends CatcherCanvas implements ICacheView {
 
     private IViewNavigator viewNavigator;
-
     private Cache cache;
 
     public Cache getCache() {
@@ -34,12 +32,10 @@ public class CacheView extends CatcherCanvas implements ICacheView {
     /**
      * constructor
      */
-    public CacheView(IViewNavigator viewNavigator) {
+    public CacheView(IViewNavigator viewNavigator, ViewResources viewResources) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
-
-        // fixme: This is not the right place to call loadImages();
-        loadImages();
+        this.viewResources = viewResources;
     }
     
     /**

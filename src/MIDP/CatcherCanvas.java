@@ -9,11 +9,8 @@ package MIDP;
 
 import System.Cache;
 import System.DateUtils;
-import java.io.IOException;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
-import javax.microedition.lcdui.game.Sprite;
 
 
 
@@ -53,16 +50,7 @@ public abstract class CatcherCanvas extends Canvas {
     private static final int IC_CROSSHAIR2 = 17;
     private static final int IC_CACHES_OFFS = 32;
 
-    private Image icons16x16;
-
-    public void loadImages() {
-        try {
-            icons16x16 = Image.createImage("/icons16x16.png");
-        }
-        catch(IOException e) {
-            throw new RuntimeException("Load resource: "+e);
-        }
-    }
+    protected ViewResources viewResources;
 
     protected boolean screenOrientation() {
         return getHeight() > getWidth();
@@ -97,15 +85,6 @@ public abstract class CatcherCanvas extends Canvas {
         }
     }
 
-    private Image getIcon(int index) {
-        // icons16x16 is expected to be 128px wide / 8 icons wide
-        int x = (index & 0x07) << 4; // index % 8 * 16
-        int y = (index & 0xf8) << 1; // index / 8 * 16
-        Image im = Image.createImage(icons16x16, x, y, 16, 16,
-                Sprite.TRANS_NONE);
-        return im;
-    }
-
     protected void paintSelectedCache(Graphics g) {
         int x1 = 0;
         int y1 = 0;
@@ -129,8 +108,8 @@ public abstract class CatcherCanvas extends Canvas {
         int[] lastLogs = {0,2,0,1};
         int heading = 3; // clockwise degree from north / 45;
 
-        g.drawImage(getIcon(IC_CACHES_OFFS+cacheType), x1, y1, Graphics.TOP|Graphics.LEFT);
-        g.drawImage(getIcon(IC_COMPASS_OFFS+heading), x2, y1, Graphics.TOP|Graphics.RIGHT);
+        g.drawImage(viewResources.getIcon(IC_CACHES_OFFS+cacheType), x1, y1, Graphics.TOP|Graphics.LEFT);
+        g.drawImage(viewResources.getIcon(IC_COMPASS_OFFS+heading), x2, y1, Graphics.TOP|Graphics.RIGHT);
 
         // Draws a set of squares to indicate cache health based on latest logs
         for (int i=0;i<lastLogs.length;i++) {

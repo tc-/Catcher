@@ -15,23 +15,21 @@ import javax.microedition.lcdui.Graphics;
 
 public class MapView extends CatcherCanvas implements IMapView {
 
-    private String msg = "Greetings Catcher";
-
     private IViewNavigator viewNavigator;
 
     private Position center;
 
     private int zoom;
 
+    private String msg = "Greetings Catcher";
+
     /**
      * constructor
      */
-    public MapView(IViewNavigator viewNavigator) {
+    public MapView(IViewNavigator viewNavigator, ViewResources viewResources) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
-
-        // fixme: This is not the right place to call loadImages();
-        loadImages();
+        this.viewResources = viewResources;
     }
 
     public Position getCenter() {

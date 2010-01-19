@@ -8,17 +8,15 @@
 package MIDP;
 
 import GUI.ICacheListView;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import GUI.IViewNavigator;
 import System.Cache;
 
-public class CacheListView extends Canvas implements ICacheListView {
+public class CacheListView extends CatcherCanvas implements ICacheListView {
 
     private IViewNavigator viewNavigator;
 
     private Cache[] caches;
-
     private Cache selected;
 
     public Cache getSelected() {
@@ -40,9 +38,10 @@ public class CacheListView extends Canvas implements ICacheListView {
     /**
      * constructor
      */
-    public CacheListView(IViewNavigator viewNavigator) {
+    public CacheListView(IViewNavigator viewNavigator, ViewResources viewResources) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
+        this.viewResources = viewResources;
     }
     
     /**
