@@ -43,6 +43,27 @@ public abstract class CatcherCanvas extends Canvas {
         0xff0000 // LOG_DISABLED
     };
 
+    // Icon indexes
+    private static final int IC_COMPASS_OFFS = 0; // 0--7: 8 directions,
+                                                  // clockwise from north
+    private static final int IC_GPS_OK = 8;
+    private static final int IC_GPS_LIMITED = 9;
+    private static final int IC_GPS_OFF = 10;
+    private static final int IC_CROSSHAIR1 = 16;
+    private static final int IC_CROSSHAIR2 = 17;
+    private static final int IC_CACHES_OFFS = 32;
+
+    private Image icons16x16;
+
+    public void loadImages() {
+        try {
+            icons16x16 = Image.createImage("/icons16x16.png");
+        }
+        catch(IOException e) {
+            throw new RuntimeException("Load resource: "+e);
+        }
+    }
+
     protected boolean screenOrientation() {
         return getHeight() > getWidth();
     }
@@ -70,31 +91,11 @@ public abstract class CatcherCanvas extends Canvas {
             g.drawString(DateUtils.getDateTimeStr(), x2>>1, y2,
                     Graphics.HCENTER | Graphics.BOTTOM);
         } else {
-            // Put some effort here later.
+            // fixme: Put some effort here later.
+            g.setColor(COLOR_TEXT);
+            g.drawString("Landscape view not implemented", 0, 40, Graphics.TOP|Graphics.LEFT);
         }
     }
-
-    private Image icons16x16;
-
-    // fixme: run this on init and remove this lousy comment
-    private void loadImages() {
-       try {
-           icons16x16 = Image.createImage("/icons16x16.png");
-       }
-       catch(IOException e) {
-           throw new RuntimeException("Load resource: "+e);
-       }
-    }
-
-    // Icon indexes
-    private static final int IC_COMPASS_OFFS = 0; // 0--7: 8 directions,
-                                                  // clockwise from north
-    private static final int IC_GPS_OK = 8;
-    private static final int IC_GPS_LIMITED = 9;
-    private static final int IC_GPS_OFF = 10;
-    private static final int IC_CROSSHAIR1 = 16;
-    private static final int IC_CROSSHAIR2 = 17;
-    private static final int IC_CACHES_OFFS = 32;
 
     private Image getIcon(int index) {
         // icons16x16 is expected to be 128px wide / 8 icons wide
@@ -115,11 +116,6 @@ public abstract class CatcherCanvas extends Canvas {
         g.setColor(COLOR_CACHELIST_BG);
         g.fillRect(x1, y1, x2, y2);
 
-        // Tiny compass
-        g.setColor(COLOR_COMPASS_BG);
-        g.fillArc(x2-ht, y1, ht-1, ht-1, 0, 360); // off by one in wth/ht
-        g.setColor(COLOR_OUTLINE);
-        g.drawArc(x2-ht, y1, ht-1, ht-1, 0, 360);
 
         // fake data until cache store is in place
         String cacheName = "Under the bridge";
@@ -131,8 +127,10 @@ public abstract class CatcherCanvas extends Canvas {
         int terrain = 3;
         int difficulty = 2;
         int[] lastLogs = {0,2,0,1};
+        int heading = 3; // clockwise degree from north / 45;
 
-        g.drawImage(getIcon(IC_CACHES_OFFS+cacheType), x1, y1, 1);
+        g.drawImage(getIcon(IC_CACHES_OFFS+cacheType), x1, y1, Graphics.TOP|Graphics.LEFT);
+        g.drawImage(getIcon(IC_COMPASS_OFFS+heading), x2, y1, Graphics.TOP|Graphics.RIGHT);
 
         // Draws a set of squares to indicate cache health based on latest logs
         for (int i=0;i<lastLogs.length;i++) {
