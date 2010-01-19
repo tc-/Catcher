@@ -23,6 +23,17 @@ public class MapView extends CatcherCanvas implements IMapView {
 
     private int zoom;
 
+    /**
+     * constructor
+     */
+    public MapView(IViewNavigator viewNavigator) {
+        setFullScreenMode(true);
+        this.viewNavigator = viewNavigator;
+
+        // fixme: This is not the right place to call loadImages();
+        loadImages();
+    }
+
     public Position getCenter() {
         return center;
     }
@@ -39,14 +50,6 @@ public class MapView extends CatcherCanvas implements IMapView {
         this.zoom = zoom;
     }
 
-    /**
-     * constructor
-     */
-    public MapView(IViewNavigator viewNavigator) {
-        setFullScreenMode(true);
-        this.viewNavigator = viewNavigator;
-    } 
-    
 
 
 

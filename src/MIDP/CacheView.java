@@ -17,7 +17,7 @@ import javax.microedition.lcdui.Graphics;
 /**
  * @author tc
  */
-public class CacheView extends Canvas implements ICacheView {
+public class CacheView extends CatcherCanvas implements ICacheView {
 
     private IViewNavigator viewNavigator;
 
@@ -37,16 +37,23 @@ public class CacheView extends Canvas implements ICacheView {
     public CacheView(IViewNavigator viewNavigator) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
+
+        // fixme: This is not the right place to call loadImages();
+        loadImages();
     }
     
     /**
      * paint
      */
     public void paint(Graphics g) {
-        g.setColor(255, 255, 255);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(COLOR_BACKGROUND);
+        g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
+
+        paintStatusBar(g);
+        paintSelectedCache(g);
+
         g.setColor(0, 0, 0);
-        g.drawString("CacheView",0,0,Graphics.TOP|Graphics.LEFT);
+        g.drawString("CacheView",0,40,Graphics.TOP|Graphics.LEFT);
     }
     
     /**

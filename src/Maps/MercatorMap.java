@@ -34,7 +34,8 @@ public class MercatorMap implements IMapProvider {
 
     public double tiley2lat(int y, int z) {
         double n = Math.PI - 2 * Math.PI * y / (1 << z);
-        return 180 / Math.PI * MathUtil.atan(0.5 * (MathUtil.exp(n) - MathUtil.exp(-n)));
+        return 180 / Math.PI * MathUtil.atan(0.5 * (MathUtil.exp(n) -
+                MathUtil.exp(-n)));
     }
 
     public Position pixelXYtoPosition(int x, int y) {
