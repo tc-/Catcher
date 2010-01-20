@@ -4,15 +4,13 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
-
 package MIDP;
 
+import GUI.IViewNavigator;
 import System.Cache;
 import System.DateUtils;
 import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
-
-
 
 public abstract class CatcherCanvas extends Canvas {
 
@@ -51,6 +49,25 @@ public abstract class CatcherCanvas extends Canvas {
     private static final int IC_CACHES_OFFS = 32;
 
     protected ViewResources viewResources;
+    protected IViewNavigator viewNavigator;
+
+    /*
+     * Handle events common to all views.
+     * Returns true if no action was taken.
+     */
+    protected boolean globalKeyPressed(int keyCode) {
+        switch(getGameAction(keyCode)) {
+            case LEFT:
+                viewNavigator.ShowPrevious();
+                break;
+            case RIGHT:
+                viewNavigator.ShowNext();
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
 
     protected boolean screenOrientation() {
         return getHeight() > getWidth();
@@ -121,6 +138,4 @@ public abstract class CatcherCanvas extends Canvas {
         g.drawString(cacheName, x1+20, y1,
                 Graphics.LEFT | Graphics.TOP);
     }
-
-
 }

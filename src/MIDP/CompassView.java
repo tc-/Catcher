@@ -4,7 +4,6 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
-
 package MIDP;
 
 import GUI.*;
@@ -14,8 +13,6 @@ import System.Position;
 import javax.microedition.lcdui.Graphics;
 
 public class CompassView extends CatcherCanvas implements ICompassView {
-
-    private IViewNavigator viewNavigator;
 
     private Position myPosition;
     private Direction myDirection;
@@ -44,7 +41,6 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     public void setTargetPosition(Position targetPosition) {
         this.targetPosition = targetPosition;
     }
-
 
     /**
      * constructor
@@ -129,8 +125,6 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     public void paint(Graphics g) {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
-        g.setColor(0, 0, 0);
-        g.drawString("CompassView",0,0,Graphics.TOP|Graphics.LEFT);
         
         paintStatusBar(g);
         paintSelectedCache(g);
@@ -142,14 +136,8 @@ public class CompassView extends CatcherCanvas implements ICompassView {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        switch(getGameAction(keyCode)) {
-            case LEFT:
-                viewNavigator.ShowPrevious();
-                break;
-            case RIGHT:
-                viewNavigator.ShowNext();
-                break;
-        }
+        if (globalKeyPressed(keyCode)) { return; }
+        // Local events goes here
     }
     
     /**
@@ -189,5 +177,4 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     public void deactivate() {
 
     }
-    
 }

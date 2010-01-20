@@ -4,7 +4,6 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
-
 package MIDP;
 
 import GUI.IMapView;
@@ -12,10 +11,7 @@ import GUI.IViewNavigator;
 import System.Position;
 import javax.microedition.lcdui.Graphics;
 
-
 public class MapView extends CatcherCanvas implements IMapView {
-
-    private IViewNavigator viewNavigator;
 
     private Position center;
 
@@ -72,6 +68,7 @@ public class MapView extends CatcherCanvas implements IMapView {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
+        if (globalKeyPressed(keyCode)) { return; }
         switch(getGameAction(keyCode)) {
             case GAME_A: msg="game_a";break;
             case GAME_B: msg="game_b";break;

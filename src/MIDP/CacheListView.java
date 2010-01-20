@@ -4,7 +4,6 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
-
 package MIDP;
 
 import GUI.ICacheListView;
@@ -13,8 +12,6 @@ import GUI.IViewNavigator;
 import System.Cache;
 
 public class CacheListView extends CatcherCanvas implements ICacheListView {
-
-    private IViewNavigator viewNavigator;
 
     private Cache[] caches;
     private Cache selected;
@@ -57,15 +54,7 @@ public class CacheListView extends CatcherCanvas implements ICacheListView {
     /**
      * Called when a key is pressed.
      */
-    protected  void keyPressed(int keyCode) {
-        switch(getGameAction(keyCode)) {
-            case LEFT:
-                viewNavigator.ShowPrevious();
-                break;
-            case RIGHT:
-                viewNavigator.ShowNext();
-                break;
-        }
+    protected void keyPressed(int keyCode) {
     }
     
     /**
@@ -105,5 +94,4 @@ public class CacheListView extends CatcherCanvas implements ICacheListView {
     public void deactivate() {
         
     }
-
 }
