@@ -1,0 +1,4 @@
+Mindblurbs of things to do in no particular order
+
+on load, read default home coordinates and set as my position
+in settings, make it possible to set home coords, alt remember last position
