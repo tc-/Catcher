@@ -4,21 +4,16 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
-
 package MIDP;
 
 import GUI.ICacheListView;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 import GUI.IViewNavigator;
 import System.Cache;
 
-public class CacheListView extends Canvas implements ICacheListView {
-
-    private IViewNavigator viewNavigator;
+public class CacheListView extends CatcherCanvas implements ICacheListView {
 
     private Cache[] caches;
-
     private Cache selected;
 
     public Cache getSelected() {
@@ -40,9 +35,10 @@ public class CacheListView extends Canvas implements ICacheListView {
     /**
      * constructor
      */
-    public CacheListView(IViewNavigator viewNavigator) {
+    public CacheListView(IViewNavigator viewNavigator, ViewResources viewResources) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
+        this.viewResources = viewResources;
     }
     
     /**
@@ -58,15 +54,7 @@ public class CacheListView extends Canvas implements ICacheListView {
     /**
      * Called when a key is pressed.
      */
-    protected  void keyPressed(int keyCode) {
-        switch(getGameAction(keyCode)) {
-            case LEFT:
-                viewNavigator.ShowPrevious();
-                break;
-            case RIGHT:
-                viewNavigator.ShowNext();
-                break;
-        }
+    protected void keyPressed(int keyCode) {
     }
     
     /**
@@ -106,5 +94,4 @@ public class CacheListView extends Canvas implements ICacheListView {
     public void deactivate() {
         
     }
-
 }

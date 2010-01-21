@@ -4,22 +4,14 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
-
 package MIDP;
 
 import GUI.ICacheView;
 import GUI.IViewNavigator;
 import System.Cache;
-import javax.microedition.lcdui.Canvas;
 import javax.microedition.lcdui.Graphics;
 
-
-/**
- * @author tc
- */
 public class CacheView extends CatcherCanvas implements ICacheView {
-
-    private IViewNavigator viewNavigator;
 
     private Cache cache;
 
@@ -34,12 +26,10 @@ public class CacheView extends CatcherCanvas implements ICacheView {
     /**
      * constructor
      */
-    public CacheView(IViewNavigator viewNavigator) {
+    public CacheView(IViewNavigator viewNavigator, ViewResources viewResources) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
-
-        // fixme: This is not the right place to call loadImages();
-        loadImages();
+        this.viewResources = viewResources;
     }
     
     /**
@@ -60,14 +50,8 @@ public class CacheView extends CatcherCanvas implements ICacheView {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        switch(getGameAction(keyCode)) {
-            case LEFT:
-                viewNavigator.ShowPrevious();
-                break;
-            case RIGHT:
-                viewNavigator.ShowNext();
-                break;
-        }
+        if (globalKeyPressed(keyCode)) { return; }
+        // Local events goes here
     }
     
     /**
@@ -107,5 +91,4 @@ public class CacheView extends CatcherCanvas implements ICacheView {
     public void deactivate() {
         
     }
-
 }

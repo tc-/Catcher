@@ -4,7 +4,6 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
-
 package MIDP;
 
 import GUI.*;
@@ -14,8 +13,6 @@ import System.Position;
 import javax.microedition.lcdui.Graphics;
 
 public class CompassView extends CatcherCanvas implements ICompassView {
-
-    private IViewNavigator viewNavigator;
 
     private Position myPosition;
     private Direction myDirection;
@@ -45,23 +42,22 @@ public class CompassView extends CatcherCanvas implements ICompassView {
         this.targetPosition = targetPosition;
     }
 
-
     /**
      * constructor
      */
-    public CompassView(IViewNavigator viewNavigator) {
+    public CompassView(IViewNavigator viewNavigator,
+            ViewResources viewResources) {
         setFullScreenMode(true);
         this.viewNavigator = viewNavigator;
-
-        // fixme: This is not the right place to call loadImages();
-        loadImages();
+        this.viewResources = viewResources;
     }
 
     /*
      * Draws a circular compass
      * It's assumed that bearing and target are 0>n>360
      */
-    private void paintCompass(Graphics g, int bearing, int target, int x1, int y1, int x2, int y2) {
+    private void paintCompass(Graphics g, int bearing, int target, int x1,
+            int y1, int x2, int y2) {
 
         int dia = (x2 < y2? x2 : y2);
         int radius = dia >> 1;
@@ -129,8 +125,6 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     public void paint(Graphics g) {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
-        g.setColor(0, 0, 0);
-        g.drawString("CompassView",0,0,Graphics.TOP|Graphics.LEFT);
         
         paintStatusBar(g);
         paintSelectedCache(g);
@@ -142,14 +136,8 @@ public class CompassView extends CatcherCanvas implements ICompassView {
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        switch(getGameAction(keyCode)) {
-            case LEFT:
-                viewNavigator.ShowPrevious();
-                break;
-            case RIGHT:
-                viewNavigator.ShowNext();
-                break;
-        }
+        if (globalKeyPressed(keyCode)) { return; }
+        // Local events goes here
     }
     
     /**
@@ -189,5 +177,4 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     public void deactivate() {
 
     }
-    
 }

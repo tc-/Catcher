@@ -15,6 +15,11 @@ public class Position {
         this.lon = longitude;
     }
 
+    public void setLatLon(double latitude, double longitude) {
+        this.lat = latitude;
+        this.lon = longitude;
+    }
+
     public double getLat() {
         return lat;
     }

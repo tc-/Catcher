@@ -30,6 +30,7 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
     private IView current = null;
     private CatcherMain main = null;
     private MIDPSettingsStore settingsStore = null;
+    private ViewResources viewResources = new ViewResources();
 
     public void startApp() {
         if (main == null) {
@@ -69,19 +70,19 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
     }
 
     public ICacheView getCacheView() {
-        return new CacheView(main);
+        return new CacheView(main, viewResources);
     }
 
     public ICacheListView getCacheListView(ICacheProvider cacheProvider, IPositionProvider positionProvider) {
-        return new CacheListView(main);
+        return new CacheListView(main, viewResources);
     }
 
     public ICompassView getCompassView(ICacheProvider cacheProvider, IPositionProvider positionProvider) {
-        return new CompassView(main);
+        return new CompassView(main, viewResources);
     }
 
     public IMapView getMapView(ICacheProvider cacheProvider, IPositionProvider positionProvider, IMapProvider mapProvider) {
-        return new MapView(main);
+        return new MapView(main, viewResources);
     }
 
     public IImageLoader getImageLoader() {
