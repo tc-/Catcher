@@ -6,9 +6,9 @@
  */
 package Maps;
 
+import System.Position;
 import System.IMapProvider;
 import System.MathUtil;
-import System.Position;
 
 /**
  * Spherical mercator (Google style) tiled map with 256x256px tiles.
@@ -28,6 +28,14 @@ public class MercatorMap implements IMapProvider {
     private static final int ZOOM_MAX = 20;
 
     private int zoom;
+
+    // It is assumed these will not be used before a call to getMap()
+    // they are used in pixel to coord conversions.
+    private Position mapCenter;
+    private int mapWidth;
+    private int mapHeight;
+    private int[] mapTileX;
+    private int[] mapTileY;
 
     public int getZoom() {
         return zoom;
@@ -55,7 +63,19 @@ public class MercatorMap implements IMapProvider {
     }
 
     public Position XYtoPosition(int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // offset in map to center tile
+        int ctx = (mapWidth >> 1)-mapTileX[1];
+        int cty = (mapHeight >> 1)-mapTileY[1];
+
+        /* case:
+         * ctx = -20
+         * x = 270
+         * x-ctx = 290
+         * 290/256=1
+         */
+        int xPos = (mapTileX[0]<<3)+(x-ctx);
+        int yPos = (mapTileY[0]<<3)+(y-cty);
+        return new Position(yToLat(yPos), xToLon(xPos));
     }
 
     /*
@@ -66,12 +86,17 @@ public class MercatorMap implements IMapProvider {
      * position by a half tile instead.
      */
     public Object getMap(Position center, int width, int height) {
-        // Get center tile position and calculate the rest from there.
-        int[] tileX = tileX(center.getLon());
-        int[] tileY = tileY(center.getLat());
+        mapCenter = center;
+        mapWidth = width;
+        mapHeight = height;
 
-        int tx1 = tileX[0]-tileX[1];
-        int ty1 = tileY[0]-tileY[1];
+        // Get center tile position and calculate the rest from there.
+        mapTileX = tileX(center.getLon());
+        mapTileY = tileY(center.getLat());
+
+        // offset in map to center tile
+        int ctx = (width >> 1)-mapTileX[1];
+        int cty = (height >> 1)-mapTileY[1];
 
         /*
          * Find tile arrangement
@@ -92,23 +117,22 @@ public class MercatorMap implements IMapProvider {
          * -1+255 >> 3 = 0
          * 255--1 >> 3 = 1
         */
-        int tilesLeft = (tx1+255) >> 3;
-        int tilesAbove = (ty1+255) >> 3;
+        int tilesLeft = (ctx+255) >> 3;
+        int tilesAbove = (cty+255) >> 3;
 
-        int tilesRight = (width-1-tx1) >> 3;
-        int tilesBelow = (height-1-ty1) >> 3;
+        int tilesRight = (width-1-ctx) >> 3;
+        int tilesBelow = (height-1-cty) >> 3;
 
         int nofTilesX = tilesLeft+tilesRight+1;
         int nofTilesY = tilesAbove+tilesBelow+1;
 
-        int[] topLeftTile = {tileX[0]-tilesLeft, tileY[0]-tilesAbove};
-
         // offset of topleftmost tile.
-        int firstX = tx1-(tilesLeft<<3);
-        int firstY = ty1-(tilesAbove<<3);
-        int firstTileX = tileX[0]-tilesLeft;
-        int firstTileY = tileY[0]-tilesAbove;
+        int firstX = ctx-(tilesLeft<<3);
+        int firstY = cty-(tilesAbove<<3);
+        int firstTileX = mapTileX[0]-tilesLeft;
+        int firstTileY = mapTileY[0]-tilesAbove;
 
+        Object map=null;
         for (int y=0; y<nofTilesY; y++) {
             for (int x=0; x<nofTilesX; x++) {
                 Object imTile = getTile(firstTileX+x, firstTileY+y, getZoom());
@@ -116,7 +140,7 @@ public class MercatorMap implements IMapProvider {
 
             }
         }
-        return null;
+        return map;
     }
 
     private void paintTile(Object tileImage, int xOffs, int yOffs) {
@@ -158,14 +182,26 @@ public class MercatorMap implements IMapProvider {
         return ret;
     }
 
-    // WIP
-    private double tileXtoLong(int x) {
-        return x / (1 << zoom) * 360 - 180;
+    /*
+     * Returns longitude for given tile.tileoffs X value
+     * x is a fixed point int n.8 (8 bits fraction)
+     *
+     * fixme: optimize
+     */
+    private double xToLon(int x) {
+        double dx = x/256;
+        return dx / (1 << zoom) * 360 - 180;
     }
 
-    // WIP
-    private double tileXtoLat(int y) {
-        double n = Math.PI - 2 * Math.PI * y / (1 << zoom);
+    /*
+     * Returns latitude for given tile+tileoffs Y value
+     * y is a fixed point int n.8 (8 bits fraction)
+     * 
+     * fixme: optimize
+     */
+    private double yToLat(int y) {
+        double dy = y/256;
+        double n = Math.PI - 2 * Math.PI * dy / (1 << zoom);
         return 180 / Math.PI * MathUtil.atan(0.5 * (MathUtil.exp(n) -
                 MathUtil.exp(-n)));
     }
