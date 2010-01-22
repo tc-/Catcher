@@ -6,6 +6,7 @@
  */
 package Maps;
 
+import System.IImageLoader;
 import System.Position;
 import System.IMapProvider;
 import System.MathUtil;
@@ -20,9 +21,13 @@ import System.MathUtil;
  * Doesn't handle wrapping around longitude -180/179
  */
 public class MercatorMap implements IMapProvider {
+    private IImageLoader imageLoader = null;
+
+    private static final int NOF_CACHED_TILES = 16;
 
     // We could set this to 0 and see the entire world, but what use is it?
     private static int ZOOM_MIN = 6;
+
     // Depending on map source, this value varies. 14 would be safe for most
     // maps.
     private static final int ZOOM_MAX = 20;
@@ -36,6 +41,18 @@ public class MercatorMap implements IMapProvider {
     private int mapHeight;
     private int[] mapTileX;
     private int[] mapTileY;
+
+    private String mapSource;
+    private String mapID;
+
+    public void setMapSource(String source, String id) {
+        mapSource = source;
+        mapID = id;
+    }
+
+    public MercatorMap(IImageLoader imageLoader) {
+        this.imageLoader = imageLoader;
+    }
 
     public int getZoom() {
         return zoom;
@@ -132,34 +149,48 @@ public class MercatorMap implements IMapProvider {
         int firstTileX = mapTileX[0]-tilesLeft;
         int firstTileY = mapTileY[0]-tilesAbove;
 
-        Object map=null;
+        Object map = imageLoader.createImage(width, height);
+        Object imTile = null;
         for (int y=0; y<nofTilesY; y++) {
             for (int x=0; x<nofTilesX; x++) {
-                Object imTile = getTile(firstTileX+x, firstTileY+y, getZoom());
-                paintTile(imTile, firstX+(x<<3), firstY+(y<<3));
-
+                imTile = getTile(firstTileX+x, firstTileY+y, getZoom());
+                map = imageLoader.drawImage(map, imTile, firstX+(x<<3),
+                        firstY+(y<<3));
             }
         }
         return map;
     }
 
-    private void paintTile(Object tileImage, int xOffs, int yOffs) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private String getTileURL(int tileX, int tileY, int tileZ) {
+        
+        return null;
+    }
+
+    private String getTilePath(int tileX, int tileY, int tileZ) {
+        return null;
     }
 
     private Object getTile(int tileX, int tileY, int tileZ) {
+        // Try local storage
+        String path = getTilePath(tileX, tileY, tileZ);
+        Object imTile = imageLoader.localLoad(path, NOF_CACHED_TILES);
+        if (imTile != null) { return imTile; }
+
+        // Get from http
+        String url = getTileURL(tileX, tileY, tileZ);
+        imTile = imageLoader.httpLoad(url, path, NOF_CACHED_TILES);
+
         /*
-         * we need to implement a IImageLoader for map tiles!
-         *
-        Object t1 = imgldr.loadImage(tile1);
-        Object t2 = imgldr.loadImage(tile1);
-        Object img = imgldr.createImage(width, height);
-        imgldr.drawImage(img, t1, x1, y1);
-        imgldr.drawImage(img, t2, x2, y2);
+    Object httpLoad(String url, String localCachePath);
+    Object localLoad(String path);
+
+    Object createImage(int width, int height);
+    Object drawImage(Object canvas, Object image, int xPos, int yPos);
+
 
         return img;
         */
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null; // No image for you
     }
 
     /*
