@@ -10,7 +10,7 @@ public class Position {
     private double lat;
     private double lon;
 
-    public void Position(double latitude, double longitude) {
+    public Position(double latitude, double longitude) {
         this.lat = latitude;
         this.lon = longitude;
     }
