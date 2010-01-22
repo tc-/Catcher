@@ -10,6 +10,7 @@ import System.IImageLoader;
 import System.Position;
 import System.IMapProvider;
 import System.MathUtil;
+import System.StringUtils;
 
 /**
  * Spherical mercator (Google style) tiled map with 256x256px tiles.
@@ -42,12 +43,41 @@ public class MercatorMap implements IMapProvider {
     private int[] mapTileX;
     private int[] mapTileY;
 
-    private String mapSource;
-    private String mapID;
+    // Default to OSM's mapnik maps
+    // fixme: review http://wiki.openstreetmap.org/wiki/Tile_usage_policy
+    private String mapSource="http://tile.openstreetmap.org/[INVZ]/[X]/[Y].png";
+    private String mapID="osm_mapnik";
 
-    public void setMapSource(String source, String id) {
-        mapSource = source;
-        mapID = id;
+    // fixme: add format detection
+    private String mapTileFormat=".png";
+
+    /*
+     * source is an URL typically in the form
+     * http://maps.url/?x=[X]&y=[Y]&z=[Z] or
+     * http://maps.url/[Z]/[X]/[Y].png
+     *
+     * [X], [Y] and [Z] are case sensitive, and must all be in the string
+     *
+     * An other client uses [INVZ] which in fact is NOT inverted. URLs formatted
+     * for that client needs to drop "INV" for those URLs to work with Catcher.
+     *
+     * Returns true if map source is valid.
+     * Note that this function does not check if the maps are available or even
+     * if the domain exists.
+     */
+    public boolean setMapSource(String source, String id) {
+        // We have this input validation here in case the settings file is
+        // altered with an external tool. It is assumed the strings are != null.
+        if ((source.indexOf("[X]")>0)
+                && (source.indexOf("[Y]")>0)
+                && (source.indexOf("[Z]")>0)
+                && (source.indexOf("http")==0) // Note that https is allowed too
+                && (id.length() > 0)) {
+            mapSource = source;
+            mapID = id;
+            return true;
+        }
+        return false;
     }
 
     public MercatorMap(IImageLoader imageLoader) {
@@ -161,13 +191,21 @@ public class MercatorMap implements IMapProvider {
         return map;
     }
 
+    /*
+     * Returns a string url
+     */
     private String getTileURL(int tileX, int tileY, int tileZ) {
-        
-        return null;
+        String s = new String(mapSource);
+        s = StringUtils.replace(mapSource, "[X]", String.valueOf(tileX));
+        s = StringUtils.replace(mapSource, "[Y]", String.valueOf(tileY));
+        s = StringUtils.replace(mapSource, "[Z]", String.valueOf(tileZ));
+        return s;
     }
 
     private String getTilePath(int tileX, int tileY, int tileZ) {
-        return null;
+        return mapID+"/"+String.valueOf(tileZ)
+                +"/"+String.valueOf(tileX)
+                +"/"+String.valueOf(tileY)+mapTileFormat;
     }
 
     private Object getTile(int tileX, int tileY, int tileZ) {
@@ -180,17 +218,7 @@ public class MercatorMap implements IMapProvider {
         String url = getTileURL(tileX, tileY, tileZ);
         imTile = imageLoader.httpLoad(url, path, NOF_CACHED_TILES);
 
-        /*
-    Object httpLoad(String url, String localCachePath);
-    Object localLoad(String path);
-
-    Object createImage(int width, int height);
-    Object drawImage(Object canvas, Object image, int xPos, int yPos);
-
-
-        return img;
-        */
-        return null; // No image for you
+        return imTile;
     }
 
     /*
