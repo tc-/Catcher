@@ -233,14 +233,11 @@ public class MercatorMap implements IMapProvider {
      * Get tile from image loader.
      */
     private Object getTile(int tileX, int tileY, int tileZ) {
-        // Try local storage
+        // Local storage path
         String path = getTilePath(tileX, tileY, tileZ);
-        Object imTile = imageLoader.localLoad(path, NOF_CACHED_TILES);
-        if (imTile != null) { return imTile; }
-
-        // Get from http
+        // http url
         String url = getTileURL(tileX, tileY, tileZ);
-        imTile = imageLoader.httpLoad(url, path, NOF_CACHED_TILES);
+        Object imTile = imageLoader.httpLoad(url, path, NOF_CACHED_TILES);
 
         return imTile;
     }
