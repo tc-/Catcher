@@ -36,6 +36,12 @@ public interface IMapProvider {
     Position XYtoPosition(int x, int y);
 
     /*
+     * Returns {mapX, mapY} from a given position.
+     * It's assumed that getMap has been called prior to a call to this function
+     */
+    int[] positionToXY(Position position);
+
+    /*
      * Returns a map at current zoom level.
      */
     Object getMap(Position center, int width, int height);
