@@ -125,6 +125,23 @@ public class MercatorMap implements IMapProvider {
         return new Position(yToLat(yPos), xToLon(xPos));
     }
 
+    public int[] positionToXY(Position position) {
+        int[] tileX = tileX(position.getLon());
+        int[] tileY = tileY(position.getLat());
+
+        int pX = tileX[0]<<3+tileX[1];
+        int pY = tileY[0]<<3+tileY[1];
+
+        int mapX = mapTileX[0]<<3+mapTileX[1];
+        int mapY = mapTileY[0]<<3+mapTileY[1];
+
+        int retX = pX-mapX+(mapWidth>>1);
+        int retY = pY-mapY+(mapHeight>>1);
+
+        int[] ret = {retX, retY};
+        return ret;
+    }
+
     /*
      * fixme: Prioritize tile loading order, load from center
      * 
@@ -202,12 +219,19 @@ public class MercatorMap implements IMapProvider {
         return s;
     }
 
+    /*
+     * Returns the path to the local tile.
+     * It's the callers responsibility to check if the tile exists.
+     */
     private String getTilePath(int tileX, int tileY, int tileZ) {
         return mapID+"/"+String.valueOf(tileZ)
                 +"/"+String.valueOf(tileX)
                 +"/"+String.valueOf(tileY)+mapTileFormat;
     }
 
+    /*
+     * Get tile from image loader.
+     */
     private Object getTile(int tileX, int tileY, int tileZ) {
         // Try local storage
         String path = getTilePath(tileX, tileY, tileZ);
@@ -222,6 +246,7 @@ public class MercatorMap implements IMapProvider {
     }
 
     /*
+     * Calculate tile x from longitude.
      * Returns { tile, offset in tile }
      */
     private int[] tileX(double lon) {
@@ -231,6 +256,7 @@ public class MercatorMap implements IMapProvider {
     }
 
     /*
+     * Calculate tile y from latitude.
      * Returns { tile, offset in tile }
      */
     private int[] tileY(double lat) {
