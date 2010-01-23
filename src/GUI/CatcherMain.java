@@ -36,7 +36,7 @@ public class CatcherMain implements IViewNavigator {
     public void start() {
         // Get platform implementations
         IViewManager views = platform.getViewManager();
-        SettingsManager sett = new SettingsManager(platform.getSettingsStore());
+        SettingsManager sett = new SettingsManager(platform);
         ICacheProvider caches = sett.getCacheProvider();
         IPositionProvider pos = platform.getPositionProvider();
         IMapProvider maps = sett.getMapProvider();

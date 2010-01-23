@@ -7,17 +7,21 @@
 
 package System;
 
+import Caches.OpenCachingProvider;
+import Maps.MercatorMap;
+
 /**
  * Provides user/application settings to the rest of the application
  */
 public class SettingsManager {
 
     private ISettingsStore store;
+    private IPlatformManager platform;
 
-
-    public SettingsManager(ISettingsStore store)
+    public SettingsManager(IPlatformManager platform)
     {
-        this.store = store;
+        this.platform = platform;
+        this.store = platform.getSettingsStore();
     }
 
     /**
@@ -33,7 +37,7 @@ public class SettingsManager {
      * @return Currently selected IMapProvider
      */
     public IMapProvider getMapProvider() {
-        return null;
+        return new MercatorMap(platform.getImageLoader());
     }
 
     /**
@@ -57,7 +61,7 @@ public class SettingsManager {
      * @return Currently selected ICacheProvider
      */
     public ICacheProvider getCacheProvider() {
-        return null;
+        return new OpenCachingProvider();
     }
     
     /**
