@@ -6,10 +6,12 @@
  */
 package MIDP;
 
+import GUI.CatcherMain;
 import GUI.IMapView;
-import GUI.IViewNavigator;
+import System.ICacheProvider;
+import System.IMapProvider;
+import System.IPositionProvider;
 import System.Position;
-import Maps.MercatorMap;
 import System.IImageLoader;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
@@ -22,19 +24,19 @@ public class MapView extends CatcherCanvas implements IMapView {
 
     private String msg = "Greetings Catcher";
 
-    private MercatorMap map = null;
-    private final MIDPImageLoader imageLoader;
+    private IMapProvider mapProvider = null;
+    //private IImageLoader imageLoader = null;
+
     /**
      * constructor
      */
-    public MapView(IViewNavigator viewNavigator, ViewResources viewResources) {
+    public MapView(CatcherMain main, ViewResources viewResources, ICacheProvider cacheProvider, IPositionProvider positionProvider,
+            IMapProvider mapProvider, IImageLoader imageLoader) {
         setFullScreenMode(true);
-        this.viewNavigator = viewNavigator;
         this.viewResources = viewResources;
         
-        // This code is temporary and will be moved out
-        imageLoader = new MIDPImageLoader();
-        map = new MercatorMap(imageLoader);
+        //this.imageLoader = imageLoader;
+        this.mapProvider = mapProvider;
     }
 
     public Position getCenter() {
@@ -65,7 +67,7 @@ public class MapView extends CatcherCanvas implements IMapView {
 
         // this is a temporary Position var until location is implemented
         Position pos = new Position(47.1, 14.8);
-        g.drawImage((Image)map.getMap(pos, getWidth(), 200), 0, 30,
+        g.drawImage((Image)mapProvider.getMap(pos, getWidth(), 200), 0, 30,
                 Graphics.TOP|Graphics.LEFT);
 
         g.setColor(0, 0, 0);

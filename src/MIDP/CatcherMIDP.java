@@ -82,11 +82,11 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
     }
 
     public IMapView getMapView(ICacheProvider cacheProvider, IPositionProvider positionProvider, IMapProvider mapProvider) {
-        return new MapView(main, viewResources);
+        return new MapView(main, viewResources, cacheProvider, positionProvider, mapProvider, getImageLoader());
     }
 
     public IImageLoader getImageLoader() {
-        return null;
+        return new MIDPImageLoader();
     }
 
     public IPositionProvider getPositionProvider() {
