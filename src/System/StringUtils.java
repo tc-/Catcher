@@ -15,8 +15,9 @@ public class StringUtils {
      * Replace oldStr with newStr in s
      */
     public static String replace(String s, String oldStr, String newStr) {
-        int count = s.indexOf(oldStr)-1;
+        int count = s.indexOf(oldStr);
+        if (count < 0) return null;
         return s.substring(0, count) + newStr +
-                s.substring(count+oldStr.length()+2);
+                s.substring(count+oldStr.length());
     }
 }
