@@ -10,4 +10,6 @@ package System;
 
 public interface IPositionProvider {
 
+    Position getLastPosition();
+
 }
