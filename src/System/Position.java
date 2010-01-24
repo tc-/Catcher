@@ -33,6 +33,7 @@ public class Position {
     }
 
     /*
+     * Estimated distance between this coord and another coord in km.
      * Reference:
      * http://openmap.bbn.com/mailArchives/openmap-users/2002-03/0665.html
      */
