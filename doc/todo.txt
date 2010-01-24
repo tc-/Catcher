@@ -1,4 +1,18 @@
 Mindblurbs of things to do in no particular order
 
 on load, read default home coordinates and set as my position
+
 in settings, make it possible to set home coords, alt remember last position
+
+remove state vars from mercatormap
+
+introduce metersPerPixel()
+
+in the current model, the MercatorMap requests tiles to render a map at every repaint. We should change it so that we have a tile composition that is clipped to the requested dimension.
+
+Flow according to TC
+1. MapView ber SettingsManager efter en IMapProvider, en ICacheProvider, och en IPositionProvider
+     2. MapView ber om en position från IPositionProvider
+     3. MapView ber IMapProvider om en karta att rita ut
+     4. MapView ber om alla cacher som finns inom en viss radie från ICacheProvider
+     5. MapView ber IMapProvider om x, y för alla chacher och ritar ut dom

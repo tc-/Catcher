@@ -67,7 +67,7 @@ public class MapView extends CatcherCanvas implements IMapView {
 
         // this is a temporary Position var until location is implemented
         Position pos = new Position(47.1, 14.8);
-        g.drawImage((Image)mapProvider.getMap(pos, getWidth(), 200), 0, 30,
+        g.drawImage((Image)mapProvider.getMap(pos, getWidth(), 200, zoom), 0, 30,
                 Graphics.TOP|Graphics.LEFT);
 
         g.setColor(0, 0, 0);
