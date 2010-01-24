@@ -27,29 +27,20 @@ public class MercatorMap implements IMapProvider {
     private static final int NOF_CACHED_TILES = 16;
 
     // We could set this to 0 and see the entire world, but what use is it?
-    private static int ZOOM_MIN = 6;
+    private static final int ZOOM_MIN = 6;
 
     // Depending on map source, this value varies. 14 would be safe for most
     // maps.
     private static final int ZOOM_MAX = 20;
 
-    private int zoom;
-
-    // It is assumed these will not be used before a call to getMap()
-    // they are used in pixel to coord conversions.
-    private Position mapCenter;
-    private int mapWidth;
-    private int mapHeight;
-    private int[] mapTileX;
-    private int[] mapTileY;
-
-    // Default to OSM's mapnik maps
+    // fixme: OSM's mapnik maps are hardcoded, and these don't belong here!
     // fixme: review http://wiki.openstreetmap.org/wiki/Tile_usage_policy
-    private String mapSource="http://tile.openstreetmap.org/[INVZ]/[X]/[Y].png";
-    private String mapID="osm_mapnik";
+    private static final String mapSource=
+            "http://tile.openstreetmap.org/[INVZ]/[X]/[Y].png";
+    private static final String mapID="osm_mapnik";
 
     // fixme: add format detection
-    private String mapTileFormat=".png";
+    private static final String mapTileFormat=".png";
 
     /*
      * source is an URL typically in the form
@@ -65,7 +56,7 @@ public class MercatorMap implements IMapProvider {
      * Note that this function does not check if the maps are available or even
      * if the domain exists.
      */
-    public boolean setMapSource(String source, String id) {
+    public boolean isValidMapSource(String source, String id) {
         // We have this input validation here in case the settings file is
         // altered with an external tool. It is assumed the strings are != null.
         if ((source.indexOf("[X]")>0)
@@ -73,8 +64,6 @@ public class MercatorMap implements IMapProvider {
                 && (source.indexOf("[Z]")>0)
                 && (source.indexOf("http")==0) // Note that https is allowed too
                 && (id.length() > 0)) {
-            mapSource = source;
-            mapID = id;
             return true;
         }
         return false;
@@ -84,32 +73,19 @@ public class MercatorMap implements IMapProvider {
         this.imageLoader = imageLoader;
     }
 
-    public int getZoom() {
-        return zoom;
+    public int zoomIn(int zoom) {
+        return (zoom<=ZOOM_MAX? ++zoom:zoom);
     }
 
-    public void setZoom(int zoom) {
-        this.zoom = (zoom<=ZOOM_MAX ? (zoom>=ZOOM_MIN?zoom:ZOOM_MIN):ZOOM_MAX);
+    public int zoomOut(int zoom) {
+        return (zoom>=ZOOM_MIN? --zoom:zoom);
     }
 
-    public boolean zoomIn() {
-        if (zoom <= ZOOM_MAX) {
-            ++zoom;
-            return true;
-        }
-        return false;
-    }
+    public Position XYtoPosition(int x, int y, Position center, int mapWidth,
+            int mapHeight, int zoom) {
+        int[] mapTileX = tileX(center.getLon(), zoom);
+        int[] mapTileY = tileY(center.getLat(), zoom);
 
-    public boolean zoomOut() {
-        if (zoom >= ZOOM_MIN) {
-            --zoom;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Position XYtoPosition(int x, int y) {
         // offset in map to center tile
         int ctx = (mapWidth >> 1)-mapTileX[1];
         int cty = (mapHeight >> 1)-mapTileY[1];
@@ -122,12 +98,16 @@ public class MercatorMap implements IMapProvider {
          */
         int xPos = (mapTileX[0]<<3)+(x-ctx);
         int yPos = (mapTileY[0]<<3)+(y-cty);
-        return new Position(yToLat(yPos), xToLon(xPos));
+        return new Position(yToLat(yPos, zoom), xToLon(xPos, zoom));
     }
 
-    public int[] positionToXY(Position position) {
-        int[] tileX = tileX(position.getLon());
-        int[] tileY = tileY(position.getLat());
+    public int[] positionToXY(Position position, Position center, int mapWidth,
+            int mapHeight, int zoom) {
+        int[] mapTileX = tileX(center.getLon(), zoom);
+        int[] mapTileY = tileY(center.getLat(), zoom);
+
+        int[] tileX = tileX(position.getLon(), zoom);
+        int[] tileY = tileY(position.getLat(), zoom);
 
         int pX = tileX[0]<<3+tileX[1];
         int pY = tileY[0]<<3+tileY[1];
@@ -149,14 +129,11 @@ public class MercatorMap implements IMapProvider {
      * ordering by distance to map center. Optimize by offsetting map center
      * position by a half tile instead.
      */
-    public Object getMap(Position center, int width, int height) {
-        mapCenter = center;
-        mapWidth = width;
-        mapHeight = height;
+    public Object getMap(Position center, int width, int height, int zoom) {
 
         // Get center tile position and calculate the rest from there.
-        mapTileX = tileX(center.getLon());
-        mapTileY = tileY(center.getLat());
+        int[] mapTileX = tileX(center.getLon(), zoom);
+        int[] mapTileY = tileY(center.getLat(), zoom);
 
         // offset in map to center tile
         int ctx = (width >> 1)-mapTileX[1];
@@ -200,7 +177,7 @@ public class MercatorMap implements IMapProvider {
         Object imTile = null;
         for (int y=0; y<nofTilesY; y++) {
             for (int x=0; x<nofTilesX; x++) {
-                imTile = getTile(firstTileX+x, firstTileY+y, getZoom());
+                imTile = getTile(firstTileX+x, firstTileY+y, zoom);
                 map = imageLoader.drawImage(map, imTile, firstX+(x<<3),
                         firstY+(y<<3));
             }
@@ -246,7 +223,7 @@ public class MercatorMap implements IMapProvider {
      * Calculate tile x from longitude.
      * Returns { tile, offset in tile }
      */
-    private int[] tileX(double lon) {
+    private int[] tileX(double lon, int zoom) {
         int tileX = (int)((lon + 180) / 360 * (1 << (zoom+3)));
         int[] ret = {tileX >> 3, tileX & 0xff};
         return ret;
@@ -256,7 +233,7 @@ public class MercatorMap implements IMapProvider {
      * Calculate tile y from latitude.
      * Returns { tile, offset in tile }
      */
-    private int[] tileY(double lat) {
+    private int[] tileY(double lat, int zoom) {
         lat = Math.toRadians(lat*Math.PI/180);
         int tileY = (int)(1 - MathUtil.log(Math.tan(Math.toRadians(lat))+1 /
                 Math.cos(Math.toRadians(lat)) / Math.PI) / 2 * (1 << (zoom+3)));
@@ -270,7 +247,7 @@ public class MercatorMap implements IMapProvider {
      *
      * fixme: optimize
      */
-    private double xToLon(int x) {
+    private double xToLon(int x, int zoom) {
         double dx = x/256;
         return dx / (1 << zoom) * 360 - 180;
     }
@@ -281,7 +258,7 @@ public class MercatorMap implements IMapProvider {
      * 
      * fixme: optimize
      */
-    private double yToLat(int y) {
+    private double yToLat(int y, int zoom) {
         double dy = y/256;
         double n = Math.PI - 2 * Math.PI * dy / (1 << zoom);
         return 180 / Math.PI * MathUtil.atan(0.5 * (MathUtil.exp(n) -
