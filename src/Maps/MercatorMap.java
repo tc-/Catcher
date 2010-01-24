@@ -36,7 +36,7 @@ public class MercatorMap implements IMapProvider {
     // fixme: OSM's mapnik maps are hardcoded, and these don't belong here!
     // fixme: review http://wiki.openstreetmap.org/wiki/Tile_usage_policy
     private static final String mapSource=
-            "http://tile.openstreetmap.org/[INVZ]/[X]/[Y].png";
+            "http://tile.openstreetmap.org/[Z]/[X]/[Y].png";
     private static final String mapID="osm_mapnik";
 
     // fixme: add format detection
@@ -190,9 +190,9 @@ public class MercatorMap implements IMapProvider {
      */
     private String getTileURL(int tileX, int tileY, int tileZ) {
         String s = new String(mapSource);
-        s = StringUtils.replace(mapSource, "[X]", String.valueOf(tileX));
-        s = StringUtils.replace(mapSource, "[Y]", String.valueOf(tileY));
-        s = StringUtils.replace(mapSource, "[Z]", String.valueOf(tileZ));
+        s = StringUtils.replace(s, "[X]", String.valueOf(tileX));
+        s = StringUtils.replace(s, "[Y]", String.valueOf(tileY));
+        s = StringUtils.replace(s, "[Z]", String.valueOf(tileZ));
         return s;
     }
 
