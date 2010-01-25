@@ -86,7 +86,13 @@ public class MercatorMap implements IMapProvider {
         int[] mapTileX = tileX(center.getLon(), zoom);
         int[] mapTileY = tileY(center.getLat(), zoom);
 
-        // offset in map to center tile
+//        maptilex0*256+maptilex1-mapwidth+x
+
+        int xPos = (mapTileX[0]<<8)+mapTileX[1]-(mapWidth>>1)+x;
+        int yPos = (mapTileY[0]<<8)+mapTileY[1]-(mapHeight>>1)+y;
+        System.out.println(String.valueOf(xPos)+", "+
+                String.valueOf(yPos));
+/*        // offset in map to center tile
         int ctx = (mapWidth >> 1)-mapTileX[1];
         int cty = (mapHeight >> 1)-mapTileY[1];
 
@@ -96,8 +102,8 @@ public class MercatorMap implements IMapProvider {
          * x-ctx = 290
          * 290/256=1
          */
-        int xPos = (mapTileX[0]<<3)+(x-ctx);
-        int yPos = (mapTileY[0]<<3)+(y-cty);
+/*        int xPos = (mapTileX[0]<<8)+(x-ctx);
+        int yPos = (mapTileY[0]<<8)+(y-cty);*/
         return new Position(yToLat(yPos, zoom), xToLon(xPos, zoom));
     }
 
@@ -253,7 +259,8 @@ public class MercatorMap implements IMapProvider {
      * fixme: optimize
      */
     private double xToLon(int x, int zoom) {
-        double dx = x/256;
+        double dx = (double)x/256;
+        System.out.println("dx "+String.valueOf(dx));
         return dx / (1 << zoom) * 360 - 180;
     }
 
@@ -264,7 +271,8 @@ public class MercatorMap implements IMapProvider {
      * fixme: optimize
      */
     private double yToLat(int y, int zoom) {
-        double dy = y/256;
+        double dy = (double)y/256;
+        System.out.println("dy "+String.valueOf(dy));
         double n = Math.PI - 2 * Math.PI * dy / (1 << zoom);
         return 180 / Math.PI * MathUtil.atan(0.5 * (MathUtil.exp(n) -
                 MathUtil.exp(-n)));
