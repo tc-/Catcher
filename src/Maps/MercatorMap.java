@@ -134,33 +134,33 @@ public class MercatorMap implements IMapProvider {
          * Find tile arrangement
          *
          * case1 tx1=57 width=240
-         * 57+255 >> 3 = 312 >> 3 = 1
-         * 240-57 >> 3 = 183 >> 3 = 0
+         * 57+255 >> 3 = 312 >> 8 = 1
+         * 240-57 >> 3 = 183 >> 8 = 0
          * case2 tx1=-3
-         * -3+255 >> 3 = 252 >> 3 = 0
-         * 240-3 >> 3 = 237 >> 3 = 0
+         * -3+255 >> 8 = 252 >> 8 = 0
+         * 240-3 >> 8 = 237 >> 8 = 0
          * case3 tx1=0 width=256
-         * 0+255 >> 3 = 0
-         * 255-0 >> 3 = 0
+         * 0+255 >> 8 = 0
+         * 255-0 >> 8 = 0
          * case4 tx1=1 width=256
-         * 1+255 >> 3 = 1
-         * 255-1 >> 3 = 0
+         * 1+255 >> 8 = 1
+         * 255-1 >> 8 = 0
          * case5 tx1=-1 width=256
-         * -1+255 >> 3 = 0
-         * 255--1 >> 3 = 1
+         * -1+255 >> 8 = 0
+         * 255--1 >> 8 = 1
         */
-        int tilesLeft = (ctx+255) >> 3;
-        int tilesAbove = (cty+255) >> 3;
+        int tilesLeft = (ctx+255) >> 8;
+        int tilesAbove = (cty+255) >> 8;
 
-        int tilesRight = (width-1-ctx) >> 3;
-        int tilesBelow = (height-1-cty) >> 3;
+        int tilesRight = (width-1-ctx) >> 8;
+        int tilesBelow = (height-1-cty) >> 8;
 
         int nofTilesX = tilesLeft+tilesRight+1;
         int nofTilesY = tilesAbove+tilesBelow+1;
 
         // offset of topleftmost tile.
-        int firstX = ctx-(tilesLeft<<3);
-        int firstY = cty-(tilesAbove<<3);
+        int firstX = ctx-(tilesLeft<<8);
+        int firstY = cty-(tilesAbove<<8);
         int firstTileX = mapTileX[0]-tilesLeft;
         int firstTileY = mapTileY[0]-tilesAbove;
 
@@ -218,8 +218,6 @@ public class MercatorMap implements IMapProvider {
     private int[] tileX(double lon, int zoom) {
         int tileX = (int)((lon + 180) / 360 * (1 << (zoom+8)));
         int[] ret = {tileX >> 8, tileX & 0xff};
-//        System.out.println("X "+String.valueOf(ret[0])+"."+
-//                String.valueOf(ret[1]));
         return ret;
     }
 
