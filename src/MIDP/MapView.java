@@ -34,6 +34,7 @@ public class MapView extends CatcherCanvas implements IMapView {
             IMapProvider mapProvider, IImageLoader imageLoader) {
         setFullScreenMode(true);
         this.viewResources = viewResources;
+        this.viewNavigator = main;//viewNavigator;
         
         //this.imageLoader = imageLoader;
         this.mapProvider = mapProvider;
@@ -65,9 +66,40 @@ public class MapView extends CatcherCanvas implements IMapView {
         paintStatusBar(g);
         paintSelectedCache(g);
 
-        // this is a temporary Position var until location is implemented
-        Position pos = new Position(47.1, 14.8);
-        g.drawImage((Image)mapProvider.getMap(pos, getWidth(), 200, zoom), 0, 30,
+        // Lab code ahead!!
+        setCenter(new Position(57.77947, 14.22107));
+        Position pos1 = new Position(57.6, 14.2);
+
+        int distance = pos1.distanceTo(getCenter());
+        g.drawString("Distance: "+String.valueOf(distance),0,100,Graphics.TOP|Graphics.LEFT);
+
+        zoom=14;
+        int[] xyCenter = mapProvider.positionToXY(center, center, getWidth(), 200, zoom);
+        int[] xyPos1 = mapProvider.positionToXY(pos1, center, getWidth(), 200, zoom);
+
+        g.drawString("Zoom:"+String.valueOf(zoom)+" Center: "+
+                String.valueOf(xyCenter[0])+":"+String.valueOf(xyCenter[1])
+                +" Pos1:"+
+                String.valueOf(xyPos1[0])+":"+String.valueOf(xyPos1[1])
+                ,0,120,Graphics.TOP|Graphics.LEFT);
+
+        g.drawArc(xyCenter[0], xyCenter[1], 5, 5, 0, 360);
+
+        g.setColor(255, 0, 0);
+        g.drawArc(xyPos1[0], xyPos1[1], 5, 5, 0, 360);
+
+        Position convPos = mapProvider.XYtoPosition(xyCenter[0], xyCenter[1], center, getWidth(), 200, zoom);
+
+        g.drawString("Center "+String.valueOf(center.getLat())+", "+
+                String.valueOf(center.getLon()), 0, 140, Graphics.TOP|Graphics.LEFT);
+        g.drawString("Conv "+String.valueOf(convPos.getLat())+", "+
+                String.valueOf(convPos.getLon()), 0, 160, Graphics.TOP|Graphics.LEFT);
+
+        int[] xyPos2 = mapProvider.positionToXY(convPos, center, getWidth(), 200, zoom);
+        g.setColor(127, 255, 0);
+        g.drawLine(xyCenter[0], xyCenter[1], xyPos2[0], xyPos2[1]);
+        g.drawArc(xyPos2[0], xyPos2[1], 5, 5, 0, 360);
+        g.drawImage((Image)mapProvider.getMap(center, getWidth(), 200, zoom), 0, 30,
                 Graphics.TOP|Graphics.LEFT);
 
         g.setColor(0, 0, 0);
