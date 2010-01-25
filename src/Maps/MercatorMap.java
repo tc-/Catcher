@@ -109,11 +109,11 @@ public class MercatorMap implements IMapProvider {
         int[] tileX = tileX(position.getLon(), zoom);
         int[] tileY = tileY(position.getLat(), zoom);
 
-        int pX = tileX[0]<<3+tileX[1];
-        int pY = tileY[0]<<3+tileY[1];
+        int pX = (tileX[0]<<8)+tileX[1];
+        int pY = (tileY[0]<<8)+tileY[1];
 
-        int mapX = mapTileX[0]<<3+mapTileX[1];
-        int mapY = mapTileY[0]<<3+mapTileY[1];
+        int mapX = (mapTileX[0]<<8)+mapTileX[1];
+        int mapY = (mapTileY[0]<<8)+mapTileY[1];
 
         int retX = pX-mapX+(mapWidth>>1);
         int retY = pY-mapY+(mapHeight>>1);
@@ -222,22 +222,27 @@ public class MercatorMap implements IMapProvider {
     /*
      * Calculate tile x from longitude.
      * Returns { tile, offset in tile }
+     * (verified)
      */
     private int[] tileX(double lon, int zoom) {
-        int tileX = (int)((lon + 180) / 360 * (1 << (zoom+3)));
-        int[] ret = {tileX >> 3, tileX & 0xff};
+        int tileX = (int)((lon + 180) / 360 * (1 << (zoom+8)));
+        int[] ret = {tileX >> 8, tileX & 0xff};
+//        System.out.println("X "+String.valueOf(ret[0])+"."+
+//                String.valueOf(ret[1]));
         return ret;
     }
 
     /*
      * Calculate tile y from latitude.
      * Returns { tile, offset in tile }
+     * (verified)
      */
     private int[] tileY(double lat, int zoom) {
-        lat = Math.toRadians(lat*Math.PI/180);
-        int tileY = (int)(1 - MathUtil.log(Math.tan(Math.toRadians(lat))+1 /
-                Math.cos(Math.toRadians(lat)) / Math.PI) / 2 * (1 << (zoom+3)));
-        int[] ret = {tileY >> 3, tileY & 0xff};
+        lat = lat*Math.PI/180;
+        int tileY = (int)((1 - MathUtil.log(Math.tan(lat)+1/Math.cos(lat)) /
+                Math.PI) / 2 * (1 << (zoom+8)));
+
+        int[] ret = {tileY >> 8, tileY & 0xff};
         return ret;
     }
 
