@@ -25,21 +25,17 @@ public class MapView extends CatcherCanvas implements IMapView {
     private String msg = "Greetings Catcher";
 
     private IMapProvider mapProvider = null;
-    //private IImageLoader imageLoader = null;
 
     /**
      * constructor
      */
     public MapView(CatcherMain main, ViewResources viewResources, ICacheProvider cacheProvider, IPositionProvider positionProvider,
             IMapProvider mapProvider, IImageLoader imageLoader) {
-
         super(main);
         
         setFullScreenMode(true);
         this.viewResources = viewResources;
-        this.viewNavigator = main;//viewNavigator;
         
-        //this.imageLoader = imageLoader;
         this.mapProvider = mapProvider;
     }
 
