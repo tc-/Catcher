@@ -8,6 +8,8 @@ remove state vars from mercatormap
 
 introduce metersPerPixel()
 
+StringUtils.replace currently returns null if it fails to find the substring, this might be the wrong approach.
+
 in the current model, the MercatorMap requests tiles to render a map at every repaint. We should change it so that we have a tile composition that is clipped to the requested dimension.
 
 Flow according to TC

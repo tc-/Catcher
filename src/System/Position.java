@@ -7,8 +7,8 @@
 package System;
 
 public class Position {
-    // Radius of earth in km
-    private final static double R_EARTH_KM = 6367.0;
+    // Mean radius of earth in meters
+    private final static double R_EARTH_METERS = 6371000.0;
     private final static double RADIANSPERDEGREE = 0.017453293;
 
     private double lat;
@@ -47,15 +47,16 @@ public class Position {
         double lat2 = p.getLat() * RADIANSPERDEGREE;
         double lon2 = p.getLon() * RADIANSPERDEGREE;
 
-        double dlon = lon2 - lon1; // difference in longitude
-        double dlat = lat2 - lat1; // difference in latitude
+        double dLon = lon2 - lon1; // difference in longitude
+        double dLat = lat2 - lat1; // difference in latitude
 
-        double a = (Math.sin(dlat/2.0)* Math.sin(dlat/2.0)) +
-                (Math.cos(lat1) * Math.cos(lat2) *
-                Math.sin(dlon/2.0) * Math.sin(dlon/2.0));
+        double sinLat = Math.sin(dLat/2.0);
+        double sinLon = Math.sin(dLon/2.0);
+        double a = (sinLat*sinLat)+(Math.cos(lat1) * Math.cos(lat2) *
+                sinLon * sinLon);
 
         double c = 2.0 * MathUtil.asin(Math.sqrt(a));
 
-        return (int)(R_EARTH_KM * c); // Final distance is in kilometers.
+        return (int)(R_EARTH_METERS * c); // Final distance is in kilometers.
     }
 }

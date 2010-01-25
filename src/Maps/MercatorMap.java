@@ -36,7 +36,7 @@ public class MercatorMap implements IMapProvider {
     // fixme: OSM's mapnik maps are hardcoded, and these don't belong here!
     // fixme: review http://wiki.openstreetmap.org/wiki/Tile_usage_policy
     private static final String mapSource=
-            "http://tile.openstreetmap.org/[INVZ]/[X]/[Y].png";
+            "http://tile.openstreetmap.org/[Z]/[X]/[Y].png";
     private static final String mapID="osm_mapnik";
 
     // fixme: add format detection
@@ -86,18 +86,9 @@ public class MercatorMap implements IMapProvider {
         int[] mapTileX = tileX(center.getLon(), zoom);
         int[] mapTileY = tileY(center.getLat(), zoom);
 
-        // offset in map to center tile
-        int ctx = (mapWidth >> 1)-mapTileX[1];
-        int cty = (mapHeight >> 1)-mapTileY[1];
+        int xPos = (mapTileX[0]<<8)+mapTileX[1]-(mapWidth>>1)+x;
+        int yPos = (mapTileY[0]<<8)+mapTileY[1]-(mapHeight>>1)+y;
 
-        /* case:
-         * ctx = -20
-         * x = 270
-         * x-ctx = 290
-         * 290/256=1
-         */
-        int xPos = (mapTileX[0]<<3)+(x-ctx);
-        int yPos = (mapTileY[0]<<3)+(y-cty);
         return new Position(yToLat(yPos, zoom), xToLon(xPos, zoom));
     }
 
@@ -109,11 +100,11 @@ public class MercatorMap implements IMapProvider {
         int[] tileX = tileX(position.getLon(), zoom);
         int[] tileY = tileY(position.getLat(), zoom);
 
-        int pX = tileX[0]<<3+tileX[1];
-        int pY = tileY[0]<<3+tileY[1];
+        int pX = (tileX[0]<<8)+tileX[1];
+        int pY = (tileY[0]<<8)+tileY[1];
 
-        int mapX = mapTileX[0]<<3+mapTileX[1];
-        int mapY = mapTileY[0]<<3+mapTileY[1];
+        int mapX = (mapTileX[0]<<8)+mapTileX[1];
+        int mapY = (mapTileY[0]<<8)+mapTileY[1];
 
         int retX = pX-mapX+(mapWidth>>1);
         int retY = pY-mapY+(mapHeight>>1);
@@ -143,33 +134,33 @@ public class MercatorMap implements IMapProvider {
          * Find tile arrangement
          *
          * case1 tx1=57 width=240
-         * 57+255 >> 3 = 312 >> 3 = 1
-         * 240-57 >> 3 = 183 >> 3 = 0
+         * 57+255 >> 3 = 312 >> 8 = 1
+         * 240-57 >> 3 = 183 >> 8 = 0
          * case2 tx1=-3
-         * -3+255 >> 3 = 252 >> 3 = 0
-         * 240-3 >> 3 = 237 >> 3 = 0
+         * -3+255 >> 8 = 252 >> 8 = 0
+         * 240-3 >> 8 = 237 >> 8 = 0
          * case3 tx1=0 width=256
-         * 0+255 >> 3 = 0
-         * 255-0 >> 3 = 0
+         * 0+255 >> 8 = 0
+         * 255-0 >> 8 = 0
          * case4 tx1=1 width=256
-         * 1+255 >> 3 = 1
-         * 255-1 >> 3 = 0
+         * 1+255 >> 8 = 1
+         * 255-1 >> 8 = 0
          * case5 tx1=-1 width=256
-         * -1+255 >> 3 = 0
-         * 255--1 >> 3 = 1
+         * -1+255 >> 8 = 0
+         * 255--1 >> 8 = 1
         */
-        int tilesLeft = (ctx+255) >> 3;
-        int tilesAbove = (cty+255) >> 3;
+        int tilesLeft = (ctx+255) >> 8;
+        int tilesAbove = (cty+255) >> 8;
 
-        int tilesRight = (width-1-ctx) >> 3;
-        int tilesBelow = (height-1-cty) >> 3;
+        int tilesRight = (width-1-ctx) >> 8;
+        int tilesBelow = (height-1-cty) >> 8;
 
         int nofTilesX = tilesLeft+tilesRight+1;
         int nofTilesY = tilesAbove+tilesBelow+1;
 
         // offset of topleftmost tile.
-        int firstX = ctx-(tilesLeft<<3);
-        int firstY = cty-(tilesAbove<<3);
+        int firstX = ctx-(tilesLeft<<8);
+        int firstY = cty-(tilesAbove<<8);
         int firstTileX = mapTileX[0]-tilesLeft;
         int firstTileY = mapTileY[0]-tilesAbove;
 
@@ -190,9 +181,9 @@ public class MercatorMap implements IMapProvider {
      */
     private String getTileURL(int tileX, int tileY, int tileZ) {
         String s = new String(mapSource);
-        s = StringUtils.replace(mapSource, "[X]", String.valueOf(tileX));
-        s = StringUtils.replace(mapSource, "[Y]", String.valueOf(tileY));
-        s = StringUtils.replace(mapSource, "[Z]", String.valueOf(tileZ));
+        s = StringUtils.replace(s, "[X]", String.valueOf(tileX));
+        s = StringUtils.replace(s, "[Y]", String.valueOf(tileY));
+        s = StringUtils.replace(s, "[Z]", String.valueOf(tileZ));
         return s;
     }
 
@@ -222,22 +213,25 @@ public class MercatorMap implements IMapProvider {
     /*
      * Calculate tile x from longitude.
      * Returns { tile, offset in tile }
+     * (verified)
      */
     private int[] tileX(double lon, int zoom) {
-        int tileX = (int)((lon + 180) / 360 * (1 << (zoom+3)));
-        int[] ret = {tileX >> 3, tileX & 0xff};
+        int tileX = (int)((lon + 180) / 360 * (1 << (zoom+8)));
+        int[] ret = {tileX >> 8, tileX & 0xff};
         return ret;
     }
 
     /*
      * Calculate tile y from latitude.
      * Returns { tile, offset in tile }
+     * (verified)
      */
     private int[] tileY(double lat, int zoom) {
-        lat = Math.toRadians(lat*Math.PI/180);
-        int tileY = (int)(1 - MathUtil.log(Math.tan(Math.toRadians(lat))+1 /
-                Math.cos(Math.toRadians(lat)) / Math.PI) / 2 * (1 << (zoom+3)));
-        int[] ret = {tileY >> 3, tileY & 0xff};
+        lat = lat*Math.PI/180;
+        int tileY = (int)((1 - MathUtil.log(Math.tan(lat)+1/Math.cos(lat)) /
+                Math.PI) / 2 * (1 << (zoom+8)));
+
+        int[] ret = {tileY >> 8, tileY & 0xff};
         return ret;
     }
 
@@ -248,7 +242,8 @@ public class MercatorMap implements IMapProvider {
      * fixme: optimize
      */
     private double xToLon(int x, int zoom) {
-        double dx = x/256;
+        double dx = (double)x/256;
+        System.out.println("dx "+String.valueOf(dx));
         return dx / (1 << zoom) * 360 - 180;
     }
 
@@ -259,7 +254,8 @@ public class MercatorMap implements IMapProvider {
      * fixme: optimize
      */
     private double yToLat(int y, int zoom) {
-        double dy = y/256;
+        double dy = (double)y/256;
+        System.out.println("dy "+String.valueOf(dy));
         double n = Math.PI - 2 * Math.PI * dy / (1 << zoom);
         return 180 / Math.PI * MathUtil.atan(0.5 * (MathUtil.exp(n) -
                 MathUtil.exp(-n)));
