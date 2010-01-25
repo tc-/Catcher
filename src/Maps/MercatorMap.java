@@ -86,24 +86,9 @@ public class MercatorMap implements IMapProvider {
         int[] mapTileX = tileX(center.getLon(), zoom);
         int[] mapTileY = tileY(center.getLat(), zoom);
 
-//        maptilex0*256+maptilex1-mapwidth+x
-
         int xPos = (mapTileX[0]<<8)+mapTileX[1]-(mapWidth>>1)+x;
         int yPos = (mapTileY[0]<<8)+mapTileY[1]-(mapHeight>>1)+y;
-        System.out.println(String.valueOf(xPos)+", "+
-                String.valueOf(yPos));
-/*        // offset in map to center tile
-        int ctx = (mapWidth >> 1)-mapTileX[1];
-        int cty = (mapHeight >> 1)-mapTileY[1];
 
-        /* case:
-         * ctx = -20
-         * x = 270
-         * x-ctx = 290
-         * 290/256=1
-         */
-/*        int xPos = (mapTileX[0]<<8)+(x-ctx);
-        int yPos = (mapTileY[0]<<8)+(y-cty);*/
         return new Position(yToLat(yPos, zoom), xToLon(xPos, zoom));
     }
 
