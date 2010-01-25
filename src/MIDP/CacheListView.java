@@ -36,8 +36,9 @@ public class CacheListView extends CatcherCanvas implements ICacheListView {
      * constructor
      */
     public CacheListView(IViewNavigator viewNavigator, ViewResources viewResources) {
+        super(viewNavigator);
         setFullScreenMode(true);
-        this.viewNavigator = viewNavigator;
+
         this.viewResources = viewResources;
     }
     

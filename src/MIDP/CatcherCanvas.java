@@ -51,6 +51,11 @@ public abstract class CatcherCanvas extends Canvas {
     protected ViewResources viewResources;
     protected IViewNavigator viewNavigator;
 
+    public CatcherCanvas(IViewNavigator viewNavigator) {
+        this.viewNavigator = viewNavigator;
+    }
+
+
     /*
      * Handle events common to all views.
      * Returns true if no action was taken.

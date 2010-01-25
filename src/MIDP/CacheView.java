@@ -28,8 +28,9 @@ public class CacheView extends CatcherCanvas implements ICacheView {
      * constructor
      */
     public CacheView(IViewNavigator viewNavigator, ViewResources viewResources) {
+        super(viewNavigator);
+        
         setFullScreenMode(true);
-        this.viewNavigator = viewNavigator;
         this.viewResources = viewResources;
     }
     

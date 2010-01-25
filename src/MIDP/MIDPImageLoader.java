@@ -8,13 +8,17 @@
 package MIDP;
 
 import System.IImageLoader;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.microedition.io.Connector;
-import javax.microedition.lcdui.Image;
+import Utils.TaskRunner;
 
 
 public class MIDPImageLoader implements IImageLoader {
+
+    private TaskRunner runner;
+
+    public MIDPImageLoader() {
+        runner = new TaskRunner("Downloader", 4);
+        runner.start();
+    }
 
     public Object httpLoad(String url, String localCachePath, int minimumMemoryCache) {
         //Test image: http://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png
@@ -23,13 +27,9 @@ public class MIDPImageLoader implements IImageLoader {
         
         // Check if Image was cached
         if (ret == null) {
-            try {
-                InputStream data = Connector.openDataInputStream(url);
-                ret = Image.createImage(data); // createImage(InputStream) is MIDP 2.0
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                ret = null;
-            }
+            localCachePath = "file:///Catcher/test.png";
+           DownloaderTask task = new DownloaderTask(url, localCachePath, localCachePath);
+           runner.addTask(task);
         }
 
         return ret;
@@ -40,16 +40,11 @@ public class MIDPImageLoader implements IImageLoader {
     }
 
     public Object createImage(int width, int height) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
     public Object drawImage(Object canvas, Object image, int xPos, int yPos) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    private void StoreInCache()
-    {
-
+        return null;
     }
 
 }

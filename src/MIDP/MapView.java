@@ -32,6 +32,9 @@ public class MapView extends CatcherCanvas implements IMapView {
      */
     public MapView(CatcherMain main, ViewResources viewResources, ICacheProvider cacheProvider, IPositionProvider positionProvider,
             IMapProvider mapProvider, IImageLoader imageLoader) {
+
+        super(main);
+        
         setFullScreenMode(true);
         this.viewResources = viewResources;
         

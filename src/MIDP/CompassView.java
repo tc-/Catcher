@@ -47,8 +47,9 @@ public class CompassView extends CatcherCanvas implements ICompassView {
      */
     public CompassView(IViewNavigator viewNavigator,
             ViewResources viewResources) {
+        super(viewNavigator);
+
         setFullScreenMode(true);
-        this.viewNavigator = viewNavigator;
         this.viewResources = viewResources;
     }
 
