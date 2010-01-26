@@ -14,7 +14,6 @@ import System.IPositionProvider;
 import System.Position;
 import System.IImageLoader;
 import javax.microedition.lcdui.Graphics;
-import javax.microedition.lcdui.Image;
 
 public class MapView extends CatcherCanvas implements IMapView {
 
@@ -26,6 +25,7 @@ public class MapView extends CatcherCanvas implements IMapView {
 
     private IMapProvider mapProvider = null;
 
+    private TextBox textBox;
     /**
      * constructor
      */
@@ -37,6 +37,15 @@ public class MapView extends CatcherCanvas implements IMapView {
         this.viewResources = viewResources;
         
         this.mapProvider = mapProvider;
+        textBox = new TextBox(0, 20, getWidth(), getHeight()/2);
+        String s = new String("John Bauer föddes i Jönköping 1882. Han blev känd för sina målningar av troll.\n"+
+"Han omkom 1918 på sin resa till Stockholm då båten Per Brahe sjönk i Vättern.\n"+
+"\n"+
+"KONSTNÄREN:\n"+
+"\"John Bauer, född 4 juni 1882 i Jönköping, Småland, död 20 november 1918 på Vättern, var en svensk konstnär, målare och illustratör.\n"+
+"\n"+
+"Det är först och främst illustrationerna till ”Bland tomtar och troll” som har gjort John Bauer till en älskad konstnär. Bilderna med alla de fantastiska väsen som befolkar hans sagovärld - troll och jättar, riddare och prinsessor - har skänkt honom hans ställning som hela Sveriges sagokonstnär.\n");
+        textBox.setText(s);
     }
 
     public Position getCenter() {
@@ -66,6 +75,12 @@ public class MapView extends CatcherCanvas implements IMapView {
         paintSelectedCache(g);
 
         // Lab code ahead!!
+
+        g.setColor(COLOR_TEXT);
+
+        textBox.paint(g);
+        if (true) return;
+
         setCenter(new Position(57.77947, 14.22107));
         Position pos1 = new Position(57.6, 14.2);
 
@@ -142,6 +157,11 @@ public class MapView extends CatcherCanvas implements IMapView {
                     default: msg = "Unknown ("+String.valueOf(keyCode)
                             +") KeyName: "+getKeyName(keyCode);
                 }
+        }
+
+        switch (getGameAction(keyCode)) {
+            case UP:textBox.scrollDown();break;
+            case DOWN:textBox.scrollUp();break;
         }
         this.repaint();
     }
