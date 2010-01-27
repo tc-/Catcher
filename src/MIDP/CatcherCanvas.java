@@ -50,28 +50,55 @@ public abstract class CatcherCanvas extends Canvas {
 
     protected ViewResources viewResources;
     protected IViewNavigator viewNavigator;
+    protected Menu menu;
 
     public CatcherCanvas(IViewNavigator viewNavigator) {
         this.viewNavigator = viewNavigator;
+        String[] globalItems = {"Settings", "Log cache", "Exit"};
+        menu = new Menu(globalItems);
     }
 
+    public void paintMenu() {
+        System.out.println("paintMenu");
+    }
 
     /*
      * Handle events common to all views.
-     * Returns true if no action was taken.
+     * Returns false if no action was taken.
      */
     protected boolean globalKeyPressed(int keyCode) {
+        if (menu.opened()) {
+            switch (keyCode) {
+                case -7:
+                    menu.close();
+                    break;
+            }
+            switch (getGameAction(keyCode)) {
+                case UP:
+                    menu.up();
+                    break;
+                case DOWN:
+                    menu.down();
+                    break;
+                case FIRE:
+                    menu.select();
+                    break;
+            }
+            return true; // Always return true if menu is opened!
+        }
+        if (keyCode == -7) {
+            menu.open();
+            return true;
+        }
         switch(getGameAction(keyCode)) {
             case LEFT:
                 viewNavigator.ShowPrevious();
-                break;
+                return true;
             case RIGHT:
                 viewNavigator.ShowNext();
-                break;
-            default:
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     protected boolean screenOrientation() {
@@ -105,6 +132,7 @@ public abstract class CatcherCanvas extends Canvas {
             g.setColor(COLOR_TEXT);
             g.drawString("Landscape view not implemented", 0, 40, Graphics.TOP|Graphics.LEFT);
         }
+        menu.paint(g);
     }
 
     protected void paintSelectedCache(Graphics g) {
