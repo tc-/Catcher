@@ -46,10 +46,6 @@ public class CacheView extends CatcherCanvas implements ICacheView {
 
         g.setColor(0, 0, 0);
         g.drawString("CacheView",0,40,Graphics.TOP|Graphics.LEFT);
-
-        MIDPImageLoader loader = new MIDPImageLoader();
-        Image img = (Image)loader.httpLoad("http://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png", null, 10);
-        g.drawImage(img, 0, 0, 0);
     }
     
     /**

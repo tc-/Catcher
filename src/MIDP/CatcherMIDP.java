@@ -90,7 +90,7 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
     }
 
     public IPositionProvider getPositionProvider() {
-        return null;
+        return new PostionProvider();
     }
 
     public ISettingsStore getSettingsStore() {

@@ -37,6 +37,7 @@ public class MapView extends CatcherCanvas implements IMapView {
         this.viewResources = viewResources;
         
         this.mapProvider = mapProvider;
+        center = positionProvider.getLastPosition();
     }
 
     public Position getCenter() {
@@ -98,8 +99,10 @@ public class MapView extends CatcherCanvas implements IMapView {
         g.setColor(127, 255, 0);
         g.drawLine(xyCenter[0], xyCenter[1], xyPos2[0], xyPos2[1]);
         g.drawArc(xyPos2[0], xyPos2[1], 5, 5, 0, 360);
-        g.drawImage((Image)mapProvider.getMap(center, getWidth(), 200, zoom), 0, 30,
-                Graphics.TOP|Graphics.LEFT);
+        Image image = (Image)mapProvider.getMap(center, getWidth(), 200, zoom);
+        if (image != null) {
+            g.drawImage(image, 0, 30, Graphics.TOP|Graphics.LEFT);
+        }
 
         g.setColor(0, 0, 0);
         g.drawString("MapView",0,40,Graphics.TOP|Graphics.LEFT);
