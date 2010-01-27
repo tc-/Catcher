@@ -65,7 +65,11 @@ public abstract class CatcherCanvas extends Canvas {
     protected boolean globalKeyPressed(int keyCode) {
         if (menu.opened()) {
             switch (keyCode) {
+                /* fixme: -7 is the right soft key on nokia midp2 devices, other
+                 * phones may have different values
+                 * Meanwhile the menu can be accessed with the '#' key */
                 case -7:
+                case KEY_POUND:
                     menu.close();
                     break;
             }
@@ -82,10 +86,18 @@ public abstract class CatcherCanvas extends Canvas {
             }
             return true; // Always return true if menu is opened!
         }
-        if (keyCode == -7) {
-            menu.open();
-            return true;
+        switch (keyCode) {
+            case -7:
+            case KEY_POUND:
+                menu.open();
+                return true;
+            case -6:
+            case KEY_STAR:
+                viewNavigator.ShowNext();
+                return true;
         }
+
+        // As the views need these keys, they will be removed soon
         switch(getGameAction(keyCode)) {
             case LEFT:
                 viewNavigator.ShowPrevious();

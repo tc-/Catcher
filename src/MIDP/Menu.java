@@ -39,8 +39,6 @@ public class Menu {
 
     public void paint(Graphics g) {
         if (!opened) return;
-        System.out.println("Menu.paint");
-
 
         Font font = Font.getDefaultFont();
         int lineHeight = font.getHeight();
@@ -53,33 +51,35 @@ public class Menu {
             w = font.stringWidth(globalItems[i]);
             width = (w>width? w:width);
         }
-        int height = lineHeight*nofItems;
+        width += 4;
+        int height = lineHeight*nofItems+4;
         int x = 20;
         int y = 20;
         g.setClip(x, y, width, height);
-        g.setColor(0xaaaaff);
+        g.setColor(CatcherCanvas.COLOR_STATUSBAR_BG);
         g.fillRect(x, y, width, height);
 
         // Draw selected items background
-        g.setColor(0xffffff);
-        g.fillRect(x, y+lineHeight*index, width, lineHeight);
-
+        g.setColor(CatcherCanvas.COLOR_BACKGROUND);
+        g.fillRect(x+2, y+2+lineHeight*index, width-4, lineHeight);
+        g.setColor(CatcherCanvas.COLOR_OUTLINE);
+        g.drawRect(x, y, width-1, height-1);
+        
         // Draw each items text
-        g.setColor(0xff0000);
+        g.setColor(CatcherCanvas.COLOR_TEXT);
         for (int i=0;i<nofItems;i++) {
             if (i < viewItems.length) {
                 g.drawString(viewItems[i], 
-                        x, y+lineHeight*i, Graphics.TOP|Graphics.LEFT);
+                        x+2, y+2+lineHeight*i, Graphics.TOP|Graphics.LEFT);
             } else {
                 g.drawString(globalItems[i-viewItems.length],
-                        x, y+lineHeight*i, Graphics.TOP|Graphics.LEFT);
+                        x+2, y+2+lineHeight*i, Graphics.TOP|Graphics.LEFT);
             }
         }
     }
 
     // True if menu is displaying
     public boolean opened() {
-        System.out.println("Menu.opened = "+String.valueOf(opened));
         return opened;
     }
 

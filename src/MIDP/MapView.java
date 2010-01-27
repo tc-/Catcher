@@ -37,14 +37,16 @@ public class MapView extends CatcherCanvas implements IMapView {
         this.viewResources = viewResources;
         
         this.mapProvider = mapProvider;
-        textBox = new TextBox(0, 20, getWidth(), getHeight()/2);
-        String s = new String("John Bauer föddes i Jönköping 1882. Han blev känd för sina målningar av troll.\n"+
-"Han omkom 1918 på sin resa till Stockholm då båten Per Brahe sjönk i Vättern.\n"+
-"\n"+
-"KONSTNÄREN:\n"+
-"\"John Bauer, född 4 juni 1882 i Jönköping, Småland, död 20 november 1918 på Vättern, var en svensk konstnär, målare och illustratör.\n"+
-"\n"+
-"Det är först och främst illustrationerna till ”Bland tomtar och troll” som har gjort John Bauer till en älskad konstnär. Bilderna med alla de fantastiska väsen som befolkar hans sagovärld - troll och jättar, riddare och prinsessor - har skänkt honom hans ställning som hela Sveriges sagokonstnär.\n");
+        textBox = new TextBox(0, 200, getWidth(), getHeight()-220);
+        String s = new String(
+"java.lang.NullPointerException:\n"+
+"        at MIDP.CacheView.paint(CacheView.java:50)\n"+
+"        at javax.microedition.lcdui.Canvas.callPaint(Canvas.java:1074)\n"+
+"        at javax.microedition.lcdui.Display.repaint(Display.java:1566)\n"+
+"        at javax.microedition.lcdui.Display.registerNewCurrent(Display.java:1872)\n"+
+"        at javax.microedition.lcdui.Display.access$700(Display.java:221)\n"+
+"        at javax.microedition.lcdui.Display$DisplayAccessor.foregroundNotify(Display.java:2344)\n"+
+"        at javax.microedition.lcdui.Display$DisplayManagerImpl.donePreempting(Display.java:2721)\n");
         textBox.setText(s);
     }
 
