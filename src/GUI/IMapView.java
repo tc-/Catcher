@@ -22,4 +22,6 @@ public interface IMapView extends IView {
 
     void setZoom(int zoom);
 
+    public void maptileDownloaded();
+
 }

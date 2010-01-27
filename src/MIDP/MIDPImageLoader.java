@@ -7,6 +7,7 @@
 
 package MIDP;
 
+import GUI.IClientEvents;
 import System.IImageLoader;
 import Utils.Task;
 import Utils.TaskCompletedListener;
@@ -23,10 +24,13 @@ public class MIDPImageLoader implements IImageLoader, TaskCompletedListener {
     private final Hashtable imageCache;
     private final Vector currentDownloads;
     private final TaskRunner runner;
+    private final IClientEvents events;
 
-    public MIDPImageLoader() {
-        imageCache = new Hashtable();
-        currentDownloads = new Vector();
+    public MIDPImageLoader(IClientEvents events) {
+        this.imageCache = new Hashtable();
+        this.currentDownloads = new Vector();
+        this.events = events;
+        
         runner = new TaskRunner("Downloader", 4);
         runner.start();
     }
@@ -81,6 +85,9 @@ public class MIDPImageLoader implements IImageLoader, TaskCompletedListener {
         }
         synchronized (currentDownloads) {
             currentDownloads.removeElement(dl.getUrl());
+        }
+        if (events != null) {
+            events.maptileDownloaded();
         }
     }
 

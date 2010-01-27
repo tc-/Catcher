@@ -204,4 +204,8 @@ public class MapView extends CatcherCanvas implements IMapView {
         menu.clearViewItems();
     }
 
+    public void maptileDownloaded() {
+        this.repaint();
+    }
+
 }

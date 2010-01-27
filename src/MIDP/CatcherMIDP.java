@@ -86,7 +86,7 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
     }
 
     public IImageLoader getImageLoader() {
-        return new MIDPImageLoader();
+        return new MIDPImageLoader(main);
     }
 
     public IPositionProvider getPositionProvider() {

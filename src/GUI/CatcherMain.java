@@ -17,7 +17,7 @@ import System.SettingsManager;
 /**
  * Controls the application in a platform independent manner
  */
-public class CatcherMain implements IViewNavigator {
+public class CatcherMain implements IViewNavigator, IClientEvents {
 
     private IPlatformManager platform;
 
@@ -92,6 +92,10 @@ public class CatcherMain implements IViewNavigator {
         if (current == mapView) views.setCurrent(cacheView);
         else if (current == cacheView) views.setCurrent(compassView);
         else if (current == compassView) views.setCurrent(mapView);
+    }
+
+    public void maptileDownloaded() {
+        mapView.maptileDownloaded();
     }
     
 }
