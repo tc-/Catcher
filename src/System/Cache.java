@@ -34,7 +34,33 @@ public class Cache {
 
     public Position position;
 
+    public String hint;         // decoded
     public String name;
-    public String description;
-    
+    public String description;  // For sources with short and longdesc this is
+                                // both of them concatenated
+    public String lastLogs; // last logs concatenated, decoded
+    public int[] lastLogsType; // latest first
+    public int difficulty;
+    public int terrain;
+    public int type;
+
+    // Decode rot13 enciphered text, maybe we should move this to StringUtils?!
+    public String decodeHint(String s) {
+        String res="";
+        boolean decrypt=true;
+
+        for (int i=0;i<s.length();i++) {
+            char c = s.charAt(i);
+            if (c == '[') { decrypt = false; }
+            else if (c == ']') { decrypt = true; }
+            if (decrypt) {
+                if (c >= 'a' && c <= 'm') { c += 13; }
+                else if (c >= 'n' && c <= 'z') { c -= 13; }
+                else if (c >= 'A' && c <= 'M') { c += 13; }
+                else if (c >= 'N' && c <= 'Z') { c -= 13; }
+            }
+            res += c;
+        }
+        return res;
+    }
 }

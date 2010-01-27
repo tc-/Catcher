@@ -243,7 +243,6 @@ public class MercatorMap implements IMapProvider {
      */
     private double xToLon(int x, int zoom) {
         double dx = (double)x/256;
-        System.out.println("dx "+String.valueOf(dx));
         return dx / (1 << zoom) * 360 - 180;
     }
 
@@ -255,7 +254,6 @@ public class MercatorMap implements IMapProvider {
      */
     private double yToLat(int y, int zoom) {
         double dy = (double)y/256;
-        System.out.println("dy "+String.valueOf(dy));
         double n = Math.PI - 2 * Math.PI * dy / (1 << zoom);
         return 180 / Math.PI * MathUtil.atan(0.5 * (MathUtil.exp(n) -
                 MathUtil.exp(-n)));

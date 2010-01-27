@@ -41,19 +41,23 @@ public class CacheView extends CatcherCanvas implements ICacheView {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
 
-        paintStatusBar(g);
-        paintSelectedCache(g);
 
         g.setColor(0, 0, 0);
         g.drawString("CacheView",0,40,Graphics.TOP|Graphics.LEFT);
+
+        paintSelectedCache(g);
+
+        paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
     /**
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        if (globalKeyPressed(keyCode)) { return; }
-        // Local events goes here
+        if (!globalKeyPressed(keyCode)) {
+            // Local events goes here
+        }
+        repaint();
     }
     
     /**

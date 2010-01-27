@@ -50,28 +50,63 @@ public abstract class CatcherCanvas extends Canvas {
 
     protected ViewResources viewResources;
     protected IViewNavigator viewNavigator;
+    protected Menu menu;
 
     public CatcherCanvas(IViewNavigator viewNavigator) {
         this.viewNavigator = viewNavigator;
+        String[] globalItems = {"Settings", "Log cache", "Exit"};
+        menu = new Menu(globalItems);
     }
-
 
     /*
      * Handle events common to all views.
-     * Returns true if no action was taken.
+     * Returns false if no action was taken.
      */
     protected boolean globalKeyPressed(int keyCode) {
+        if (menu.opened()) {
+            switch (keyCode) {
+                /* fixme: -7 is the right soft key on nokia midp2 devices, other
+                 * phones may have different values
+                 * Meanwhile the menu can be accessed with the '#' key */
+                case -7:
+                case KEY_POUND:
+                    menu.close();
+                    break;
+            }
+            switch (getGameAction(keyCode)) {
+                case UP:
+                    menu.up();
+                    break;
+                case DOWN:
+                    menu.down();
+                    break;
+                case FIRE:
+                    menu.select();
+                    break;
+            }
+            return true; // Always return true if menu is opened!
+        }
+        switch (keyCode) {
+            case -7:
+            case KEY_POUND:
+                menu.open();
+                return true;
+            case -6:
+            case KEY_STAR:
+                viewNavigator.ShowNext();
+                return true;
+        }
+
+        // As the views need these keys, they will be removed soon
         switch(getGameAction(keyCode)) {
             case LEFT:
                 viewNavigator.ShowPrevious();
-                break;
+                return true;
             case RIGHT:
                 viewNavigator.ShowNext();
-                break;
-            default:
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
     protected boolean screenOrientation() {
@@ -84,38 +119,43 @@ public abstract class CatcherCanvas extends Canvas {
      */
     protected void paintStatusBar(Graphics g) {
         if (screenOrientation() == PORTRAIT) {
-            int x1 = 0;
-            int y1 = getHeight()-HEIGHT_STATUSBAR;
-            int x2 = getWidth();
-            int y2 = getHeight();
+            int x = 0;
+            int y = getHeight()-HEIGHT_STATUSBAR;
+            int width = getWidth();
+            int height = getHeight();
+            g.setClip(x, y, width, height);
 
             g.setColor(COLOR_STATUSBAR_BG);
-            g.fillRect(x1, y1, x2, y2);
+            g.fillRect(x, y, width, height);
             g.setColor(COLOR_OUTLINE);
-            g.drawLine(0, y1, x2, y1);
-            g.drawLine(30, y1, 30, y2);
-            g.drawLine(getWidth()-30, y1, x2-30, y2);
+            g.drawLine(0, y, width, y);
+            g.drawLine(30, y, 30, height);
+            g.drawLine(getWidth()-30, y, width-30, height);
             g.setColor(COLOR_TEXT);
-            g.drawString("VIEW", 15, y2, Graphics.HCENTER | Graphics.BOTTOM);
-            g.drawString("MENU", x2-15, y2, Graphics.HCENTER | Graphics.BOTTOM);
-            g.drawString(DateUtils.getDateTimeStr(), x2>>1, y2,
+            g.drawString("VIEW", 15, height, Graphics.HCENTER | Graphics.BOTTOM);
+            g.drawString("MENU", width-15, height, Graphics.HCENTER | Graphics.BOTTOM);
+            g.drawString(DateUtils.getDateTimeStr(), width>>1, height,
                     Graphics.HCENTER | Graphics.BOTTOM);
         } else {
             // fixme: Put some effort here later.
             g.setColor(COLOR_TEXT);
             g.drawString("Landscape view not implemented", 0, 40, Graphics.TOP|Graphics.LEFT);
         }
+        menu.paint(g);
     }
 
     protected void paintSelectedCache(Graphics g) {
-        int x1 = 0;
-        int y1 = 0;
-        int x2 = getWidth();
-        int y2 = HEIGHT_CACHELISTITEM;
+        int x = 0;
+        int y = 0;
+        int width = getWidth();
+        int height = HEIGHT_CACHELISTITEM;
+
+        g.setClip(x, y, width, height);
+
         int ht = HEIGHT_CACHELISTITEM;
 
         g.setColor(COLOR_CACHELIST_BG);
-        g.fillRect(x1, y1, x2, y2);
+        g.fillRect(x, y, width, height);
 
 
         // fake data until cache store is in place
@@ -130,17 +170,19 @@ public abstract class CatcherCanvas extends Canvas {
         int[] lastLogs = {0,2,0,1};
         int heading = 3; // clockwise degree from north / 45;
 
-        g.drawImage(viewResources.getIcon(IC_CACHES_OFFS+cacheType), x1, y1, Graphics.TOP|Graphics.LEFT);
-        g.drawImage(viewResources.getIcon(IC_COMPASS_OFFS+heading), x2, y1, Graphics.TOP|Graphics.RIGHT);
+        g.drawImage(viewResources.getIcon(IC_CACHES_OFFS+cacheType), x, y,
+                Graphics.TOP|Graphics.LEFT);
+        g.drawImage(viewResources.getIcon(IC_COMPASS_OFFS+heading), width, y,
+                Graphics.TOP|Graphics.RIGHT);
 
         // Draws a set of squares to indicate cache health based on latest logs
         for (int i=0;i<lastLogs.length;i++) {
             g.setColor(COLOR_LOG[lastLogs[i]]);
-            g.fillRect(x1+16, y1+(i<<2), 4, 4);
+            g.fillRect(x+16, y+(i<<2), 4, 4);
         }
 
         g.setColor(COLOR_TEXT);
-        g.drawString(cacheName, x1+20, y1,
+        g.drawString(cacheName, x+20, y,
                 Graphics.LEFT | Graphics.TOP);
     }
 }
