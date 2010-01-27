@@ -14,8 +14,8 @@ public class Menu {
     private boolean opened=false;
     private int index;
     private int nofItems;
-    String[] globalItems;
-    String[] viewItems={};
+    private String[] globalItems;
+    private String[] viewItems={};
 
     // Takes an array of strings
     Menu(String[] globalItems) {
@@ -27,6 +27,13 @@ public class Menu {
     public void viewItems(String[] viewItems) {
         this.viewItems = viewItems;
         nofItems = globalItems.length+viewItems.length;
+        index = 0;
+    }
+
+    public void clearViewItems() {
+        String[] empty = {};
+        viewItems = empty;
+        nofItems = globalItems.length;
         index = 0;
     }
 
@@ -49,6 +56,7 @@ public class Menu {
         int height = lineHeight*nofItems;
         int x = 20;
         int y = 20;
+        g.setClip(x, y, width, height);
         g.setColor(0xaaaaff);
         g.fillRect(x, y, width, height);
 
@@ -63,7 +71,7 @@ public class Menu {
                 g.drawString(viewItems[i], 
                         x, y+lineHeight*i, Graphics.TOP|Graphics.LEFT);
             } else {
-                g.drawString(globalItems[i+viewItems.length], 
+                g.drawString(globalItems[i-viewItems.length],
                         x, y+lineHeight*i, Graphics.TOP|Graphics.LEFT);
             }
         }
@@ -106,7 +114,7 @@ public class Menu {
         if (index < viewItems.length) {
             sel = viewItems[index];
         } else {
-            sel = globalItems[index+viewItems.length];
+            sel = globalItems[index-viewItems.length];
         }
         System.out.println("Menu.select: "+sel);
     }

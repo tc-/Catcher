@@ -71,16 +71,12 @@ public class MapView extends CatcherCanvas implements IMapView {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
 
-        paintStatusBar(g);
-        paintSelectedCache(g);
 
         // Lab code ahead!!
-        if (true) return;
 
         g.setColor(COLOR_TEXT);
 
         textBox.paint(g);
-        if (true) return;
 
         setCenter(new Position(57.77947, 14.22107));
         Position pos1 = new Position(57.6, 14.2);
@@ -120,6 +116,9 @@ public class MapView extends CatcherCanvas implements IMapView {
         g.setColor(0, 0, 0);
         g.drawString("MapView",0,40,Graphics.TOP|Graphics.LEFT);
         g.drawString(this.msg,0,60,Graphics.TOP|Graphics.LEFT);
+
+        paintSelectedCache(g);
+        paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
     /**
@@ -199,11 +198,13 @@ public class MapView extends CatcherCanvas implements IMapView {
     }
 
     public void activate() {
-        
+        String[] viewItems = {"Zoom in", "Zoom out", "Auto follow",
+        "Add location", "Select map"};
+        menu.viewItems(viewItems);
     }
 
     public void deactivate() {
-
+        menu.clearViewItems();
     }
 
 }

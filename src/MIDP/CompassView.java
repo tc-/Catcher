@@ -57,15 +57,18 @@ public class CompassView extends CatcherCanvas implements ICompassView {
      * Draws a circular compass
      * It's assumed that bearing and target are 0>n>360
      */
-    private void paintCompass(Graphics g, int bearing, int target, int x1,
-            int y1, int x2, int y2) {
+    private void paintCompass(Graphics g, int bearing, int target, int x,
+            int y, int width, int height) {
 
-        int dia = (x2 < y2? x2 : y2);
+        g.setClip(x, y, width, height);
+        g.setColor(0);
+
+        int dia = (width < height? width : height);
         int radius = dia >> 1;
-        int cx = x1+radius;
-        int cy = y1+radius;
+        int cx = x+radius;
+        int cy = y+radius;
 
-        g.drawArc(x1, y1, dia, dia, 0, 360);
+        g.drawArc(x, y, dia-1, dia-1, 0, 360);
 
         int angle = bearing;
         int tx1 = MathUtils.iCos(angle, radius);
@@ -127,18 +130,21 @@ public class CompassView extends CatcherCanvas implements ICompassView {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
         
-        paintStatusBar(g);
+        paintCompass(g, 5, 355, 30, 30, getWidth()-60, getHeight()-60);
+
         paintSelectedCache(g);
 
-        paintCompass(g, 5, 355, 30, 30, getWidth()-60, getHeight()-60);
+        paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
     /**
      * Called when a key is pressed.
      */
     protected  void keyPressed(int keyCode) {
-        if (globalKeyPressed(keyCode)) { return; }
-        // Local events goes here
+        if (!globalKeyPressed(keyCode)) {
+        }
+            // Local events goes here
+        repaint();
     }
     
     /**
