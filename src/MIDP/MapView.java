@@ -106,6 +106,7 @@ public class MapView extends CatcherCanvas implements IMapView {
         g.setColor(127, 255, 0);
         g.drawLine(xyCenter[0], xyCenter[1], xyPos2[0], xyPos2[1]);
         g.drawArc(xyPos2[0], xyPos2[1], 5, 5, 0, 360);
+        g.setClip(0, 0, getWidth(), getHeight());
         Image image = (Image)mapProvider.getMap(center, getWidth(), 200, zoom);
         if (image != null) {
             g.drawImage(image, 0, 30, Graphics.TOP|Graphics.LEFT);

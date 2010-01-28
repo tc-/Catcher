@@ -169,8 +169,8 @@ public class MercatorMap implements IMapProvider {
         for (int y=0; y<nofTilesY; y++) {
             for (int x=0; x<nofTilesX; x++) {
                 imTile = getTile(firstTileX+x, firstTileY+y, zoom);
-                map = imageLoader.drawImage(map, imTile, firstX+(x<<3),
-                        firstY+(y<<3));
+                map = imageLoader.drawImage(map, imTile, firstX+(x<<8),
+                        firstY+(y<<8));
             }
         }
         return map;
