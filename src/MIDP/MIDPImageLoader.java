@@ -22,15 +22,21 @@ import javax.microedition.lcdui.Image;
 public class MIDPImageLoader implements IImageLoader, TaskCompletedListener {
 
     private final Hashtable imageCache;
+    private final Vector unloadQueue;
     private final Vector currentDownloads;
     private final TaskRunner runner;
     private final IClientEvents events;
+    private int cacheSizeLow;
+    private int cacheSizeHigh;
+
 
     public MIDPImageLoader(IClientEvents events) {
         this.imageCache = new Hashtable();
         this.currentDownloads = new Vector();
+        this.unloadQueue = new Vector();
         this.events = events;
-        
+        cacheSizeLow = 16;
+        cacheSizeHigh = 24;
         runner = new TaskRunner("Downloader", 4);
         runner.start();
     }
@@ -54,6 +60,11 @@ public class MIDPImageLoader implements IImageLoader, TaskCompletedListener {
             DownloaderTask task = new DownloaderTask(url, localCachePath, localCachePath);
             task.setTaskCompletedListener(this);
             runner.addTask(task);
+        } else {
+            synchronized (unloadQueue) {
+                unloadQueue.removeElement(url);
+                unloadQueue.addElement(url);
+            }
         }
 
         return ret;
@@ -85,6 +96,16 @@ public class MIDPImageLoader implements IImageLoader, TaskCompletedListener {
         }
         synchronized (currentDownloads) {
             currentDownloads.removeElement(dl.getUrl());
+        }
+        synchronized (unloadQueue) {
+            unloadQueue.addElement(dl.getUrl());
+            if (unloadQueue.size() >= cacheSizeHigh) {
+                while (unloadQueue.size() > cacheSizeLow) {
+                    String url = (String)unloadQueue.firstElement();
+                    unloadQueue.removeElementAt(0);
+                    imageCache.remove(url);
+                }
+            }
         }
         if (events != null) {
             events.maptileDownloaded();
