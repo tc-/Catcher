@@ -14,6 +14,7 @@ import System.Position;
 public class PostionProvider implements IPositionProvider {
 
     public Position getLastPosition() {
+        System.out.println("getLastPosition");
         return new Position(47.1, 14.8);
     }
 

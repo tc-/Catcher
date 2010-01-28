@@ -51,11 +51,27 @@ public abstract class CatcherCanvas extends Canvas {
     protected ViewResources viewResources;
     protected IViewNavigator viewNavigator;
     protected Menu menu;
+    protected String[] globalItems = {"Settings", "Log cache", "Exit"};
 
     public CatcherCanvas(IViewNavigator viewNavigator) {
         this.viewNavigator = viewNavigator;
-        String[] globalItems = {"Settings", "Log cache", "Exit"};
         menu = new Menu(globalItems);
+    }
+
+    private void globalMenuAction(int item) {
+        if (item < globalItems.length) {
+            switch(item) {
+                case 0:
+                    System.out.println("menuaction Settings");
+                    break;
+                case 1:
+                    System.out.println("menuaction Log cache");
+                    break;
+                case 2:
+                    System.out.println("menuaction Exit");
+                    break;
+            }
+        }
     }
 
     /*
@@ -81,7 +97,7 @@ public abstract class CatcherCanvas extends Canvas {
                     menu.down();
                     break;
                 case FIRE:
-                    menu.select();
+                    globalMenuAction(menu.select());
                     break;
             }
             return true; // Always return true if menu is opened!
@@ -93,16 +109,7 @@ public abstract class CatcherCanvas extends Canvas {
                 return true;
             case -6:
             case KEY_STAR:
-                viewNavigator.ShowNext();
-                return true;
-        }
-
-        // As the views need these keys, they will be removed soon
-        switch(getGameAction(keyCode)) {
-            case LEFT:
-                viewNavigator.ShowPrevious();
-                return true;
-            case RIGHT:
+            case KEY_NUM0: // Convenience key when developing
                 viewNavigator.ShowNext();
                 return true;
         }

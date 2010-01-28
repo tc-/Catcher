@@ -166,6 +166,8 @@ public class MercatorMap implements IMapProvider {
 
         Object map = imageLoader.createImage(width, height);
         Object imTile = null;
+        System.out.println("mercmap: nofTilesX: "+String.valueOf(nofTilesX));
+        System.out.println("mercmap: nofTilesY: "+String.valueOf(nofTilesY));
         for (int y=0; y<nofTilesY; y++) {
             for (int x=0; x<nofTilesX; x++) {
                 imTile = getTile(firstTileX+x, firstTileY+y, zoom);

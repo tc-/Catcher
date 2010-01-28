@@ -108,7 +108,7 @@ public class Menu {
         index = (index>=nofItems-1? 0: ++index);
     }
 
-    public void select() {
+    public int select() {
         close();
         String sel = "";
         if (index < viewItems.length) {
@@ -117,5 +117,7 @@ public class Menu {
             sel = globalItems[index-viewItems.length];
         }
         System.out.println("Menu.select: "+sel);
+
+        return index-viewItems.length; // viewItems are negative
     }
 }
