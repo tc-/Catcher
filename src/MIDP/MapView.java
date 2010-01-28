@@ -43,6 +43,7 @@ public class MapView extends CatcherCanvas implements IMapView {
         
         this.mapProvider = mapProvider;
         this.positionProvider = positionProvider;
+        zoom = mapProvider.zoomOut(0); // Get lowest zoom level
         center = this.positionProvider.getLastPosition();
     }
 
