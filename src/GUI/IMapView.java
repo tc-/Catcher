@@ -7,6 +7,7 @@
 
 package GUI;
 
+import System.Direction;
 import System.Position;
 
 /**
@@ -15,12 +16,13 @@ import System.Position;
 public interface IMapView extends IView {
 
     Position getCenter();
-
-    int getZoom();
-
     void setCenter(Position center);
 
+    int getZoom();
     void setZoom(int zoom);
+
+    Direction getDirection();
+    public void setDirection(Direction newDirection);
 
     public void maptileDownloaded();
 
