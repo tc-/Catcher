@@ -4,10 +4,12 @@
  * License: GPL v3
  * Authors: richard_jonsson@hotmail.com, tommyc@lavabit.com
  */
+
 package MIDP;
 
 import GUI.CatcherMain;
 import GUI.IMapView;
+import System.Direction;
 import System.ICacheProvider;
 import System.IMapProvider;
 import System.IPositionProvider;
@@ -52,6 +54,7 @@ public class MapView extends CatcherCanvas implements IMapView {
 
     public void setCenter(Position center) {
         this.center = center;
+        repaint();
     }
 
     public int getZoom() {
@@ -60,6 +63,14 @@ public class MapView extends CatcherCanvas implements IMapView {
 
     public void setZoom(int zoom) {
         this.zoom = zoom;
+    }
+
+    public Direction getDirection() {
+        return null;
+    }
+
+    public void setDirection(Direction newDirection) {
+
     }
 
     /**

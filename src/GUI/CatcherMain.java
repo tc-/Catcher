@@ -7,17 +7,20 @@
 
 package GUI;
 
+import System.Direction;
 import System.ICacheProvider;
 import System.IMapProvider;
 import System.IPlatformManager;
+import System.PositionListener;
 import System.IPositionProvider;
+import System.Position;
 import System.SettingsManager;
 
 
 /**
  * Controls the application in a platform independent manner
  */
-public class CatcherMain implements IViewNavigator, IClientEvents {
+public class CatcherMain implements IViewNavigator, IClientEvents, PositionListener {
 
     private IPlatformManager platform;
 
@@ -41,6 +44,8 @@ public class CatcherMain implements IViewNavigator, IClientEvents {
         IPositionProvider pos = platform.getPositionProvider();
         IMapProvider maps = sett.getMapProvider();
 
+        pos.setPositionListener(this);
+        pos.setEnabled(true);
         // Create the views
         mapView = views.getMapView(caches, pos, maps);
         cacheView = views.getCacheView();
@@ -96,6 +101,18 @@ public class CatcherMain implements IViewNavigator, IClientEvents {
 
     public void maptileDownloaded() {
         mapView.maptileDownloaded();
+    }
+
+    public void PositionStatusChanged(IPositionProvider sender, int status) {
+
+    }
+
+    public void PositionUpdated(IPositionProvider sender, Position newPosition, int accuracy) {
+        mapView.setCenter(newPosition);
+    }
+
+    public void DirectionUpdated(IPositionProvider sender, Direction newDirection) {
+        mapView.setDirection(newDirection);
     }
     
 }

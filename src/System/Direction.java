@@ -11,4 +11,22 @@ package System;
 
 public class Direction {
 
+    private double azimuth;
+
+    public Direction() {
+        azimuth = 0.0;
+    }
+
+    public Direction(double azimuth) {
+        this.azimuth = azimuth;
+    }
+
+    public double getAzimuth() {
+        return azimuth;
+    }
+
+    public void setAzimuth(double azimuth) {
+        this.azimuth = azimuth;
+    }
+
 }
