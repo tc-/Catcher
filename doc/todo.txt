@@ -1,16 +1,20 @@
 Mindblurbs of things to do in no particular order
 
-on load, read default home coordinates and set as my position
+Startup:
+  * on load, read default home coordinates and set as my position
 
-in settings, make it possible to set home coords, alt remember last position
+Settings:
+  * make it possible to set home coords, alt remember last position
 
-remove state vars from mercatormap
+MercatorMap:
+  * introduce metersPerPixel()
+  * MercatorMap should wrap the map at it's edges!
+  *in the current model, the MercatorMap requests tiles to render a map at every repaint. We should change it so that we have a tile composition that is clipped to the requested dimension.
 
-introduce metersPerPixel()
+StringUtils:
+  * replace currently returns null if it fails to find the substring, this might be the wrong approach.
 
-StringUtils.replace currently returns null if it fails to find the substring, this might be the wrong approach.
 
-in the current model, the MercatorMap requests tiles to render a map at every repaint. We should change it so that we have a tile composition that is clipped to the requested dimension.
 
 Flow according to TC
 1. MapView ber SettingsManager efter en IMapProvider, en ICacheProvider, och en IPositionProvider
