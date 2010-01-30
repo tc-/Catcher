@@ -8,10 +8,10 @@ package MIDP;
 
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
+import javax.microedition.lcdui.Canvas;
 
-public class Menu {
+public class Menu implements Modal {
 
-    private boolean opened=false;
     private int index;
     private int nofItems;
     private String[] globalItems;
@@ -38,8 +38,6 @@ public class Menu {
     }
 
     public void paint(Graphics g) {
-        if (!opened) return;
-
         Font font = Font.getDefaultFont();
         int lineHeight = font.getHeight();
         int w, width=0;
@@ -78,24 +76,6 @@ public class Menu {
         }
     }
 
-    // True if menu is displaying
-    public boolean opened() {
-        return opened;
-    }
-
-    // Open menu
-    public void open() {
-        System.out.println("Menu.open");
-        opened = true;
-        index = 0;
-    }
-
-    // Close menu
-    public void close() {
-        System.out.println("Menu.close");
-        opened = false;
-    }
-
     // Move to previous item in list
     public void up() {
         System.out.println("Menu.up");
@@ -109,7 +89,6 @@ public class Menu {
     }
 
     public int select() {
-        close();
         String sel = "";
         if (index < viewItems.length) {
             sel = viewItems[index];
@@ -119,5 +98,38 @@ public class Menu {
         System.out.println("Menu.select: "+sel);
 
         return index-viewItems.length; // viewItems are negative
+    }
+
+    private void execute() {
+        // execute function associated with selected index
+        index = 0; // Reset index
+    }
+
+    public boolean keyPressed(int keyCode, Canvas canvas) {
+        switch (keyCode) {
+            /* fixme: -7 is the right soft key on nokia midp2 devices, other
+             * phones may have different values
+             * Meanwhile the menu can be accessed with the '#' key */
+            case -7:
+            case Canvas.KEY_POUND:
+                // Escape menu
+                index = 0; // Reset index
+                return true;
+        }
+        switch (canvas.getGameAction(keyCode)) {
+            case Canvas.UP:
+                // Move one item up in list
+                up();
+                break;
+            case Canvas.DOWN:
+                // Move one item down in list
+                down();
+                break;
+            case Canvas.FIRE:
+                // Execute selected items action
+                execute();
+                return true;
+        }
+        return false;
     }
 }

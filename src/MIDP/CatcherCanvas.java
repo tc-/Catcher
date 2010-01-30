@@ -52,26 +52,11 @@ public abstract class CatcherCanvas extends Canvas {
     protected IViewNavigator viewNavigator;
     protected Menu menu;
     protected String[] globalItems = {"Settings", "Log cache", "Exit"};
+    private Modal modal=null;
 
     public CatcherCanvas(IViewNavigator viewNavigator) {
         this.viewNavigator = viewNavigator;
         menu = new Menu(globalItems);
-    }
-
-    private void globalMenuAction(int item) {
-        if (item < globalItems.length) {
-            switch(item) {
-                case 0:
-                    System.out.println("menuaction Settings");
-                    break;
-                case 1:
-                    System.out.println("menuaction Log cache");
-                    break;
-                case 2:
-                    System.out.println("menuaction Exit");
-                    break;
-            }
-        }
     }
 
     protected boolean screenOrientation() {
@@ -85,8 +70,14 @@ public abstract class CatcherCanvas extends Canvas {
     abstract void paintView(Graphics g);
 
     protected final void paint(Graphics g) {
-        paintView(g);
-        paintStatusBar(g);
+        if (modal != null) {
+            System.out.println("modal.paint");
+            modal.paint(g);
+        } else {
+            System.out.println("paint");
+            paintView(g);
+            paintStatusBar(g);
+        }
     }
 
     /*
@@ -117,7 +108,6 @@ public abstract class CatcherCanvas extends Canvas {
             g.setColor(COLOR_TEXT);
             g.drawString("Landscape view not implemented", 0, 40, Graphics.TOP|Graphics.LEFT);
         }
-        menu.paint(g);
     }
 
     protected void paintSelectedCache(Graphics g) {
@@ -173,34 +163,18 @@ public abstract class CatcherCanvas extends Canvas {
      * Returns false if no action was taken.
      */
     protected final void keyPressed(int keyCode) {
-        if (menu.opened()) {
-            switch (keyCode) {
-                /* fixme: -7 is the right soft key on nokia midp2 devices, other
-                 * phones may have different values
-                 * Meanwhile the menu can be accessed with the '#' key */
-                case -7:
-                case KEY_POUND:
-                    menu.close();
-                    break;
-            }
-            switch (getGameAction(keyCode)) {
-                case UP:
-                    menu.up();
-                    break;
-                case DOWN:
-                    menu.down();
-                    break;
-                case FIRE:
-                    globalMenuAction(menu.select());
-                    break;
+        if (modal != null) {
+            if (modal.keyPressed(keyCode, this)) {
+                modal = null;
             }
             this.repaint();
+            System.out.println("repaint");
             return;
         }
         switch (keyCode) {
             case -7:
             case KEY_POUND:
-                menu.open();
+                modal = menu;
                 this.repaint();
                 return;
             case -6:
