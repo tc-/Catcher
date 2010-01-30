@@ -77,7 +77,7 @@ public class SettingsManager {
      * @return zoom-level
      */
     public int getLastZoom() {
-        return Integer.parseInt(store.getSetting("Zoom", "1"));
+        return Integer.parseInt(store.getSetting("Zoom", "10"));
     }
 
     /**

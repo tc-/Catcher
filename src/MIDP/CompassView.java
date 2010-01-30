@@ -123,9 +123,6 @@ public class CompassView extends CatcherCanvas implements ICompassView {
         g.drawLine(cx, cy, cx+ty1, cy-tx1);
     }
 
-    /**
-     * paint
-     */
     public void paint(Graphics g) {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
@@ -137,46 +134,9 @@ public class CompassView extends CatcherCanvas implements ICompassView {
         paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
-    /**
-     * Called when a key is pressed.
-     */
-    protected  void keyPressed(int keyCode) {
-        if (!globalKeyPressed(keyCode)) {
-        }
-            // Local events goes here
-        repaint();
+    protected  void keyPressedView(int keyCode) {
     }
     
-    /**
-     * Called when a key is released.
-     */
-    protected  void keyReleased(int keyCode) {
-    }
-
-    /**
-     * Called when a key is repeated (held down).
-     */
-    protected  void keyRepeated(int keyCode) {
-    }
-    
-    /**
-     * Called when the pointer is dragged.
-     */
-    protected  void pointerDragged(int x, int y) {
-    }
-
-    /**
-     * Called when the pointer is pressed.
-     */
-    protected  void pointerPressed(int x, int y) {
-    }
-
-    /**
-     * Called when the pointer is released.
-     */
-    protected  void pointerReleased(int x, int y) {
-    }
-
     public void activate() {
 
     }

@@ -74,48 +74,6 @@ public abstract class CatcherCanvas extends Canvas {
         }
     }
 
-    /*
-     * Handle events common to all views.
-     * Returns false if no action was taken.
-     */
-    protected boolean globalKeyPressed(int keyCode) {
-        if (menu.opened()) {
-            switch (keyCode) {
-                /* fixme: -7 is the right soft key on nokia midp2 devices, other
-                 * phones may have different values
-                 * Meanwhile the menu can be accessed with the '#' key */
-                case -7:
-                case KEY_POUND:
-                    menu.close();
-                    break;
-            }
-            switch (getGameAction(keyCode)) {
-                case UP:
-                    menu.up();
-                    break;
-                case DOWN:
-                    menu.down();
-                    break;
-                case FIRE:
-                    globalMenuAction(menu.select());
-                    break;
-            }
-            return true; // Always return true if menu is opened!
-        }
-        switch (keyCode) {
-            case -7:
-            case KEY_POUND:
-                menu.open();
-                return true;
-            case -6:
-            case KEY_STAR:
-            case KEY_NUM0: // Convenience key when developing
-                viewNavigator.ShowNext();
-                return true;
-        }
-        return false;
-    }
-
     protected boolean screenOrientation() {
         return getHeight() > getWidth();
     }
@@ -191,5 +149,70 @@ public abstract class CatcherCanvas extends Canvas {
         g.setColor(COLOR_TEXT);
         g.drawString(cacheName, x+20, y,
                 Graphics.LEFT | Graphics.TOP);
+    }
+
+    /**
+     * View keyPressed handler
+     * @param keyCode
+     */
+    abstract void keyPressedView(int keyCode);
+
+    /*
+     * Handle events common to all views.
+     * Returns false if no action was taken.
+     */
+    protected final void keyPressed(int keyCode) {
+        if (menu.opened()) {
+            switch (keyCode) {
+                /* fixme: -7 is the right soft key on nokia midp2 devices, other
+                 * phones may have different values
+                 * Meanwhile the menu can be accessed with the '#' key */
+                case -7:
+                case KEY_POUND:
+                    menu.close();
+                    break;
+            }
+            switch (getGameAction(keyCode)) {
+                case UP:
+                    menu.up();
+                    break;
+                case DOWN:
+                    menu.down();
+                    break;
+                case FIRE:
+                    globalMenuAction(menu.select());
+                    break;
+            }
+            this.repaint();
+            return;
+        }
+        switch (keyCode) {
+            case -7:
+            case KEY_POUND:
+                menu.open();
+                this.repaint();
+                return;
+            case -6:
+            case KEY_STAR:
+            case KEY_NUM0: // Convenience key when developing
+                viewNavigator.ShowNext();
+                return;
+        }
+        keyPressedView(keyCode); // Let the current view handle this keypress
+    }
+
+    protected  void keyReleased(int keyCode) {
+    }
+
+    protected  void keyRepeated(int keyCode) {
+    }
+
+    protected  void pointerDragged(int x, int y) {
+    }
+
+    protected  void pointerPressed(int x, int y) {
+    }
+
+    protected  void pointerReleased(int x, int y) {
     }
 }

@@ -29,9 +29,6 @@ public class MapView extends CatcherCanvas implements IMapView {
     private IMapProvider mapProvider = null;
     private final IPositionProvider positionProvider;
 
-
-    private TextBox textBox;
-
     /**
      * constructor
      */
@@ -101,67 +98,32 @@ public class MapView extends CatcherCanvas implements IMapView {
         paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
-    /**
-     * Called when a key is pressed.
-     */
-    protected  void keyPressed(int keyCode) {
-        if (!globalKeyPressed(keyCode)) {
-            switch(getGameAction(keyCode)) {
-                case UP:
-                    center = mapProvider.XYtoPosition(getWidth()/2, getHeight()/2-50, center, getWidth(), getHeight(), zoom);
-                    break;
-                case DOWN:
-                    center = mapProvider.XYtoPosition(getWidth()/2, getHeight()/2+50, center, getWidth(), getHeight(), zoom);
-                    break;
-                case LEFT:
-                    center = mapProvider.XYtoPosition(getWidth()/2-50, getHeight()/2, center, getWidth(), getHeight(), zoom);
-                    break;
-                case RIGHT:
-                    center = mapProvider.XYtoPosition(getWidth()/2+50, getHeight()/2, center, getWidth(), getHeight(), zoom);
-                    break;
-            }
-            switch(keyCode) {
-                case KEY_NUM1:
-                    zoom = mapProvider.zoomOut(zoom);
-                    break;
-                case KEY_NUM3:
-                    zoom = mapProvider.zoomIn(zoom);
-                    break;
-            }
+    protected  void keyPressedView(int keyCode) {
+        switch(getGameAction(keyCode)) {
+            case UP:
+                center = mapProvider.XYtoPosition(getWidth()/2, getHeight()/2-50, center, getWidth(), getHeight(), zoom);
+                break;
+            case DOWN:
+                center = mapProvider.XYtoPosition(getWidth()/2, getHeight()/2+50, center, getWidth(), getHeight(), zoom);
+                break;
+            case LEFT:
+                center = mapProvider.XYtoPosition(getWidth()/2-50, getHeight()/2, center, getWidth(), getHeight(), zoom);
+                break;
+            case RIGHT:
+                center = mapProvider.XYtoPosition(getWidth()/2+50, getHeight()/2, center, getWidth(), getHeight(), zoom);
+                break;
+        }
+        switch(keyCode) {
+            case KEY_NUM1:
+                zoom = mapProvider.zoomOut(zoom);
+                break;
+            case KEY_NUM3:
+                zoom = mapProvider.zoomIn(zoom);
+                break;
         }
         this.repaint();
     }
     
-    /**
-     * Called when a key is released.
-     */
-    protected  void keyReleased(int keyCode) {
-    }
-
-    /**
-     * Called when a key is repeated (held down).
-     */
-    protected  void keyRepeated(int keyCode) {
-    }
-    
-    /**
-     * Called when the pointer is dragged.
-     */
-    protected  void pointerDragged(int x, int y) {
-    }
-
-    /**
-     * Called when the pointer is pressed.
-     */
-    protected  void pointerPressed(int x, int y) {
-    }
-
-    /**
-     * Called when the pointer is released.
-     */
-    protected  void pointerReleased(int x, int y) {
-    }
-
     public void activate() {
         String[] viewItems = {"Zoom in", "Zoom out", "Auto follow",
         "Add location", "Select map"};

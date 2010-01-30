@@ -34,7 +34,7 @@ public class PostionProvider implements IPositionProvider, LocationListener {
 
     public PostionProvider() {
         orientationSupport = hasOrientationSupport();
-        lastPosition = new Position(47.1, 14.8);
+        lastPosition = new Position(57.722, 11.987);
         lastPositionAccuracy = 3;
         lastDirection = new Direction(0.0);
     }
