@@ -70,7 +70,6 @@ public class PostionProvider implements IPositionProvider, LocationListener {
 
         if (enabled) enable();
         else disable();
-        this.enabled = enabled;
     }
 
     public boolean getEnabled() {
@@ -79,11 +78,14 @@ public class PostionProvider implements IPositionProvider, LocationListener {
 
     private void enable() {
 
+        if (enabled) return;
+
+        // Try to get a provider
         if (provider == null) {
             Criteria criteria = new Criteria();
-            criteria.setVerticalAccuracy(5);
-            criteria.setHorizontalAccuracy(5);
-            criteria.setCostAllowed(false);
+            criteria.setVerticalAccuracy(25);
+            criteria.setHorizontalAccuracy(25);
+            criteria.setCostAllowed(true);
             criteria.setSpeedAndCourseRequired(true);
             criteria.setAltitudeRequired(false);
             criteria.setAddressInfoRequired(false);
@@ -92,25 +94,50 @@ public class PostionProvider implements IPositionProvider, LocationListener {
 
             try {
                 provider = LocationProvider.getInstance(criteria);
-                locationThread = new Thread(new LocationTask(provider, this));
-                //locationThread.start();
             } catch (LocationException ex) {
                 ex.printStackTrace();
             }
         }
+
+        // If we got a provider, start the location thread
+        if (provider != null) {
+            locationThread = new Thread(new LocationTask(provider, this));
+            locationThread.start();
+        }
+
+        // Start the orientation thread if orientation is supported
         if (orientationSupport) {
 
             if (orientationThread != null) {
                 orientationThread.interrupt();
             }
             orientationThread = new Thread(new OrientationTask(this));
-            //orientationThread.start();
+            orientationThread.start();
             
         }
+
+        enabled = true;
     }
 
     private void disable() {
 
+        if (!enabled) return;
+
+        if (locationThread != null) {
+            locationThread.interrupt();
+            locationThread = null;
+        }
+
+        if (orientationThread != null) {
+            orientationThread.interrupt();
+            orientationThread = null;
+        }
+
+        if (provider != null) {
+            provider.setLocationListener(null, -1, -1, -1);
+        }
+        
+        enabled = false;
     }
 
     private boolean hasOrientationSupport() {
@@ -139,7 +166,8 @@ public class PostionProvider implements IPositionProvider, LocationListener {
         if (listener != null) listener.PositionStatusChanged(this, IPositionProvider.LOC_STAT_ACTIVE);
     }
 
-    void setOrientation(Orientation o) {
+    public void setOrientation(Orientation o) {
+        if (o == null) return;
         //TODO convert between geographic and true north orientations, do this in Direction?
         lastDirection = new Direction(o.getCompassAzimuth());
         if (listener != null) listener.DirectionUpdated(this, lastDirection);
