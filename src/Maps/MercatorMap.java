@@ -31,7 +31,7 @@ public class MercatorMap implements IMapProvider {
 
     // Depending on map source, this value varies. 14 would be safe for most
     // maps.
-    private static final int ZOOM_MAX = 20;
+    private static final int ZOOM_MAX = 18;
 
     // fixme: OSM's mapnik maps are hardcoded, and these don't belong here!
     // fixme: review http://wiki.openstreetmap.org/wiki/Tile_usage_policy
@@ -74,11 +74,11 @@ public class MercatorMap implements IMapProvider {
     }
 
     public int zoomIn(int zoom) {
-        return (zoom<=ZOOM_MAX? ++zoom:zoom);
+        return (zoom < ZOOM_MAX? ++zoom:ZOOM_MAX);
     }
 
     public int zoomOut(int zoom) {
-        return (zoom>=ZOOM_MIN? --zoom:zoom);
+        return (zoom > ZOOM_MIN? --zoom:ZOOM_MIN);
     }
 
     public Position XYtoPosition(int x, int y, Position center, int mapWidth,
