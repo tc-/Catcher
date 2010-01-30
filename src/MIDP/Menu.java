@@ -17,7 +17,6 @@ public class Menu implements Modal {
     private String[] globalItems;
     private String[] viewItems={};
 
-    // Takes an array of strings
     Menu(String[] globalItems) {
         this.globalItems = globalItems;
         nofItems = globalItems.length;
@@ -38,7 +37,7 @@ public class Menu implements Modal {
     }
 
     public void paint(Graphics g) {
-        Font font = Font.getDefaultFont();
+        Font font = g.getFont();
         int lineHeight = font.getHeight();
         int w, width=0;
         for (int i=0;i<viewItems.length;i++) {
@@ -49,7 +48,7 @@ public class Menu implements Modal {
             w = font.stringWidth(globalItems[i]);
             width = (w>width? w:width);
         }
-        width += 4;
+        width += 8;
         int height = lineHeight*nofItems+4;
         int x = 20;
         int y = 20;
@@ -68,10 +67,10 @@ public class Menu implements Modal {
         for (int i=0;i<nofItems;i++) {
             if (i < viewItems.length) {
                 g.drawString(viewItems[i], 
-                        x+2, y+2+lineHeight*i, Graphics.TOP|Graphics.LEFT);
+                        x+4, y+2+lineHeight*i, Graphics.TOP|Graphics.LEFT);
             } else {
                 g.drawString(globalItems[i-viewItems.length],
-                        x+2, y+2+lineHeight*i, Graphics.TOP|Graphics.LEFT);
+                        x+4, y+2+lineHeight*i, Graphics.TOP|Graphics.LEFT);
             }
         }
     }

@@ -93,7 +93,7 @@ public class PostionProvider implements IPositionProvider, LocationListener {
             try {
                 provider = LocationProvider.getInstance(criteria);
                 locationThread = new Thread(new LocationTask(provider, this));
-                locationThread.start();
+                //locationThread.start();
             } catch (LocationException ex) {
                 ex.printStackTrace();
             }
@@ -104,7 +104,7 @@ public class PostionProvider implements IPositionProvider, LocationListener {
                 orientationThread.interrupt();
             }
             orientationThread = new Thread(new OrientationTask(this));
-            orientationThread.start();
+            //orientationThread.start();
             
         }
     }

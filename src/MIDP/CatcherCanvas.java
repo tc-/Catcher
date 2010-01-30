@@ -10,6 +10,7 @@ import GUI.IViewNavigator;
 import System.Cache;
 import System.DateUtils;
 import javax.microedition.lcdui.Canvas;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
 public abstract class CatcherCanvas extends Canvas {
@@ -53,10 +54,12 @@ public abstract class CatcherCanvas extends Canvas {
     protected Menu menu;
     protected String[] globalItems = {"Settings", "Log cache", "Exit"};
     private Modal modal=null;
+    protected Font sysFont;
 
     public CatcherCanvas(IViewNavigator viewNavigator) {
         this.viewNavigator = viewNavigator;
         menu = new Menu(globalItems);
+        sysFont = Font.getFont(Font.FACE_PROPORTIONAL, Font.STYLE_PLAIN, Font.SIZE_SMALL);
     }
 
     protected boolean screenOrientation() {
@@ -70,6 +73,7 @@ public abstract class CatcherCanvas extends Canvas {
     abstract void paintView(Graphics g);
 
     protected final void paint(Graphics g) {
+        g.setFont(sysFont);
         if (modal != null) {
             System.out.println("modal.paint");
             modal.paint(g);
