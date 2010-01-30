@@ -15,7 +15,10 @@ import javax.microedition.lcdui.Graphics;
 public class CacheView extends CatcherCanvas implements ICacheView {
 
     private Cache cache;
+
     private int fontFace = Font.FACE_SYSTEM;
+    // Careful when changing globalItems! menuAction() assumes a certain order!
+    private String[] viewItems = {"Cache list", "Set nearest"};
 
     public Cache getCache() {
         return cache;
@@ -107,10 +110,10 @@ public class CacheView extends CatcherCanvas implements ICacheView {
     }
 
     public void activate() {
-        
+        menu.viewItems(viewItems);
     }
 
     public void deactivate() {
-        
+        menu.clearViewItems();
     }
 }

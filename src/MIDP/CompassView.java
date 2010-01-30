@@ -18,6 +18,9 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     private Direction myDirection;
     private Position targetPosition;
 
+    // Careful when changing globalItems! menuAction() assumes a certain order!
+    private String[] viewItems = {"Radar", "Tracks", "Guide"};
+
     public Direction getMyDirection() {
         return myDirection;
     }
@@ -142,10 +145,10 @@ public class CompassView extends CatcherCanvas implements ICompassView {
     }
     
     public void activate() {
-
+        menu.viewItems(viewItems);
     }
 
     public void deactivate() {
-
+        menu.clearViewItems();
     }
 }

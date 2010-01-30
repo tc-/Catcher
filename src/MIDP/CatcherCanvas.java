@@ -6,7 +6,6 @@
  */
 package MIDP;
 
-import GUI.CatcherMain;
 import GUI.IViewNavigator;
 import System.Cache;
 import System.DateUtils;
@@ -163,21 +162,21 @@ public abstract class CatcherCanvas extends Canvas {
     abstract void menuActionView(int menuItem);
 
     protected final void menuAction(int menuItem) {
-        if (menuItem-globalItems.length < 0) {
-            menuActionView(menuItem);
+        if (menuItem >= globalItems.length) {
+            menuActionView(menuItem-globalItems.length);
         }
         switch (menuItem) {
             case 0:
                 // Settings
-                    System.out.println("menu Settings");
+                System.out.println("menu Settings");
                 break;
             case 1:
                 // Log cache
-                    System.out.println("menu Log cache");
+                System.out.println("menu Log cache");
                 break;
             case 2:
                 // Exit
-                    System.out.println("menu Exit");
+                System.out.println("menu Exit");
                 break;
         }
     }

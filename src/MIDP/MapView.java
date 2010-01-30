@@ -20,14 +20,16 @@ import javax.microedition.lcdui.Image;
 
 public class MapView extends CatcherCanvas implements IMapView {
 
-    private Position center = new Position(57.77947, 14.22107);
+    private Position mapCenter = new Position(57.77947, 14.22107);
 
     private int zoom=10;
 
-    private String msg = "Greetings Catcher";
-
     private IMapProvider mapProvider = null;
     private final IPositionProvider positionProvider;
+
+    // Careful when changing globalItems! menuAction() assumes a certain order!
+    private String[] viewItems = {"Zoom in", "Zoom out", "Auto follow",
+        "Add location", "Select map"};
 
     /**
      * constructor
@@ -43,15 +45,15 @@ public class MapView extends CatcherCanvas implements IMapView {
         this.mapProvider = mapProvider;
         this.positionProvider = positionProvider;
         zoom = mapProvider.zoomOut(0); // Get lowest zoom level
-        center = this.positionProvider.getLastPosition();
+        mapCenter = this.positionProvider.getLastPosition();
     }
 
     public Position getCenter() {
-        return center;
+        return mapCenter;
     }
 
     public void setCenter(Position center) {
-        this.center = center;
+        this.mapCenter = center;
         repaint();
     }
 
@@ -75,13 +77,13 @@ public class MapView extends CatcherCanvas implements IMapView {
      * paint
      */
     public void paintView(Graphics g) {
-        if (center == null) {
-            center = positionProvider.getLastPosition();
+        if (mapCenter == null) {
+            mapCenter = positionProvider.getLastPosition();
             System.out.println("center is null");
         }
         // Map
         g.setClip(0, 0, getWidth(), getHeight());
-        Image image = (Image)mapProvider.getMap(center,
+        Image image = (Image)mapProvider.getMap(mapCenter,
                 getWidth(), getHeight(), zoom);
         if (image != null) {
             g.drawImage(image, 0, 0, Graphics.TOP|Graphics.LEFT);
@@ -100,22 +102,56 @@ public class MapView extends CatcherCanvas implements IMapView {
      * @param menuItem: index in view menu array
      */
     void menuActionView(int menuItem) {
+        System.out.println("meuActionView "+String.valueOf(menuItem));
+        switch(menuItem) {
+            case 0:
+                // Zoom in
+                System.out.println("menu Zoom in");
+                zoom = mapProvider.zoomIn(zoom);
+                repaint();
+                break;
+            case 1:
+                // Zoom out
+                System.out.println("menu Zoom out");
+                zoom = mapProvider.zoomOut(zoom);
+                repaint();
+                break;
+            case 2:
+                // Auto follow
+                System.out.println("menu Auto follow (not impl)");
+                break;
+            case 3:
+                // Add location
+                System.out.println("menu Add location (not impl)");
+                break;
+            case 4:
+                // Select map
+                System.out.println("menu Select map (not impl)");
+                break;
+        }
         System.out.println("menuActionItem: "+String.valueOf(menuItem));
     }
 
     protected  void keyPressedView(int keyCode) {
         switch(getGameAction(keyCode)) {
             case UP:
-                center = mapProvider.XYtoPosition(getWidth()/2, getHeight()/2-50, center, getWidth(), getHeight(), zoom);
+                mapCenter = mapProvider.XYtoPosition(getWidth()/2, getHeight()
+                        /2-50, mapCenter, getWidth(), getHeight(), zoom);
                 break;
             case DOWN:
-                center = mapProvider.XYtoPosition(getWidth()/2, getHeight()/2+50, center, getWidth(), getHeight(), zoom);
+                mapCenter = mapProvider.XYtoPosition(getWidth()/2, getHeight()
+                        /2+50, mapCenter, getWidth(), getHeight(), zoom);
                 break;
             case LEFT:
-                center = mapProvider.XYtoPosition(getWidth()/2-50, getHeight()/2, center, getWidth(), getHeight(), zoom);
+                mapCenter = mapProvider.XYtoPosition(getWidth()/2-50, 
+                        getHeight()/2, mapCenter, getWidth(), getHeight(), zoom);
                 break;
             case RIGHT:
-                center = mapProvider.XYtoPosition(getWidth()/2+50, getHeight()/2, center, getWidth(), getHeight(), zoom);
+                mapCenter = mapProvider.XYtoPosition(getWidth()/2+50, 
+                        getHeight()/2, mapCenter, getWidth(), getHeight(), zoom);
+                break;
+            case FIRE:
+                mapCenter = positionProvider.getLastPosition();
                 break;
         }
         switch(keyCode) {
@@ -126,12 +162,10 @@ public class MapView extends CatcherCanvas implements IMapView {
                 zoom = mapProvider.zoomIn(zoom);
                 break;
         }
-        this.repaint();
+        repaint();
     }
     
     public void activate() {
-        String[] viewItems = {"Zoom in", "Zoom out", "Auto follow",
-        "Add location", "Select map"};
         menu.viewItems(viewItems);
     }
 
