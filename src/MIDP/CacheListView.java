@@ -45,7 +45,7 @@ public class CacheListView extends CatcherCanvas implements ICacheListView {
     /**
      * paint
      */
-    public void paint(Graphics g) {
+    public void paintView(Graphics g) {
         g.setColor(255, 255, 255);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(0, 0, 0);

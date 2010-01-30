@@ -37,17 +37,12 @@ public class CacheView extends CatcherCanvas implements ICacheView {
     /**
      * paint
      */
-    public void paint(Graphics g) {
+    public void paintView(Graphics g) {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
 
-
         g.setColor(0, 0, 0);
         g.drawString("CacheView",0,40,Graphics.TOP|Graphics.LEFT);
-
-        paintSelectedCache(g);
-
-        paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
     /**

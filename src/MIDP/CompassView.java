@@ -123,15 +123,11 @@ public class CompassView extends CatcherCanvas implements ICompassView {
         g.drawLine(cx, cy, cx+ty1, cy-tx1);
     }
 
-    public void paint(Graphics g) {
+    public void paintView(Graphics g) {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
         
         paintCompass(g, 5, 355, 30, 30, getWidth()-60, getHeight()-60);
-
-        paintSelectedCache(g);
-
-        paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
     protected  void keyPressedView(int keyCode) {

@@ -78,6 +78,17 @@ public abstract class CatcherCanvas extends Canvas {
         return getHeight() > getWidth();
     }
 
+    /**
+     * View paint handler
+     * @param g Graphics
+     */
+    abstract void paintView(Graphics g);
+
+    protected final void paint(Graphics g) {
+        paintView(g);
+        paintStatusBar(g);
+    }
+
     /*
      * Draw statusbar with a stored graphic later, and add date and status icons
      * for gps, battery, net and cell status.

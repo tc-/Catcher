@@ -74,7 +74,7 @@ public class MapView extends CatcherCanvas implements IMapView {
     /**
      * paint
      */
-    public void paint(Graphics g) {
+    public void paintView(Graphics g) {
         if (center == null) {
             center = positionProvider.getLastPosition();
             System.out.println("center is null");
@@ -93,9 +93,6 @@ public class MapView extends CatcherCanvas implements IMapView {
                 getWidth()/2+5, getHeight()/2);
         g.drawLine(getWidth()/2, getHeight()/2-5,
                 getWidth()/2, getHeight()/2+5);
-
-        paintSelectedCache(g);
-        paintStatusBar(g); // Keep this call last, it draws modal items (menu)
     }
     
     protected  void keyPressedView(int keyCode) {
