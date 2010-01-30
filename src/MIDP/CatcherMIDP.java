@@ -102,4 +102,7 @@ public class CatcherMIDP extends MIDlet implements IViewManager, IPlatformManage
         return this;
     }
 
+    public void quit() {
+        main.stop();
+    }
 }
