@@ -8,14 +8,8 @@
 package MIDP;
 
 import Utils.Task;
-import com.sun.kvem.jsr082.impl.PermissionsHandler;
-import com.sun.mmedia.PermissionAccessor;
-import java.io.DataOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import javax.microedition.io.Connector;
-import javax.microedition.io.OutputConnection;
-import javax.microedition.io.file.FileConnection;
 import javax.microedition.lcdui.Image;
 
 /**
@@ -41,7 +35,6 @@ public class DownloaderTask extends Task {
             image = Image.createImage(data); // createImage(InputStream) is MIDP 2.0
             data.close();
         } catch (Exception ex) {
-            ex.printStackTrace();
             image = null;
         }
     }
