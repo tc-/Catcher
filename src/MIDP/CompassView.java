@@ -130,6 +130,14 @@ public class CompassView extends CatcherCanvas implements ICompassView {
         paintCompass(g, 5, 355, 30, 30, getWidth()-60, getHeight()-60);
     }
     
+    /**
+     * Called when a menu item has been selected
+     * @param menuItem: index in view menu array
+     */
+    void menuActionView(int menuItem) {
+        System.out.println("menuActionItem: "+String.valueOf(menuItem));
+    }
+
     protected  void keyPressedView(int keyCode) {
     }
     

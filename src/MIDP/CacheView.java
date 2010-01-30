@@ -84,6 +84,14 @@ public class CacheView extends CatcherCanvas implements ICacheView {
     }
     
     /**
+     * Called when a menu item has been selected
+     * @param menuItem: index in view menu array
+     */
+    void menuActionView(int menuItem) {
+        System.out.println("menuActionItem: "+String.valueOf(menuItem));
+    }
+
+    /**
      * Called when a key is pressed.
      */
     protected  void keyPressedView(int keyCode) {

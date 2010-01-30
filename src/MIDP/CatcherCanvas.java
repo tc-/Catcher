@@ -6,6 +6,7 @@
  */
 package MIDP;
 
+import GUI.CatcherMain;
 import GUI.IViewNavigator;
 import System.Cache;
 import System.DateUtils;
@@ -52,6 +53,8 @@ public abstract class CatcherCanvas extends Canvas {
     protected ViewResources viewResources;
     protected IViewNavigator viewNavigator;
     protected Menu menu;
+
+    // Careful when changing globalItems! menuAction() assumes a certain order!
     protected String[] globalItems = {"Settings", "Log cache", "Exit"};
     private Modal modal=null;
     protected Font sysFont;
@@ -75,10 +78,8 @@ public abstract class CatcherCanvas extends Canvas {
     protected final void paint(Graphics g) {
         g.setFont(sysFont);
         if (modal != null) {
-            System.out.println("modal.paint");
             modal.paint(g);
         } else {
-            System.out.println("paint");
             paintView(g);
             paintStatusBar(g);
         }
@@ -127,7 +128,6 @@ public abstract class CatcherCanvas extends Canvas {
         g.setColor(COLOR_CACHELIST_BG);
         g.fillRect(x, y, width, height);
 
-
         // fake data until cache store is in place
         String cacheName = "Under the bridge";
         int cacheType = Cache.CT_REGULAR;
@@ -157,6 +157,32 @@ public abstract class CatcherCanvas extends Canvas {
     }
 
     /**
+     * Called by menuAction when a view menu item has been selected
+     * @param menuItem: index in view menu array
+     */
+    abstract void menuActionView(int menuItem);
+
+    protected final void menuAction(int menuItem) {
+        if (menuItem-globalItems.length < 0) {
+            menuActionView(menuItem);
+        }
+        switch (menuItem) {
+            case 0:
+                // Settings
+                    System.out.println("menu Settings");
+                break;
+            case 1:
+                // Log cache
+                    System.out.println("menu Log cache");
+                break;
+            case 2:
+                // Exit
+                    System.out.println("menu Exit");
+                break;
+        }
+    }
+
+    /**
      * View keyPressed handler
      * @param keyCode
      */
@@ -169,7 +195,10 @@ public abstract class CatcherCanvas extends Canvas {
     protected final void keyPressed(int keyCode) {
         if (modal != null) {
             if (modal.keyPressed(keyCode, this)) {
-                modal = null;
+                if ((modal == menu) && (menu.execute())) {
+                    menuAction(menu.getAction());
+                }
+                modal = modal.parentModal;
             }
             this.repaint();
             System.out.println("repaint");

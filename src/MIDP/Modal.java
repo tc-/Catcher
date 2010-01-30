@@ -14,7 +14,8 @@ import javax.microedition.lcdui.Graphics;
  * Interface for modal gui elements, such as menus and dialogs
  */
 public abstract interface Modal {
-    
+    Modal parentModal = null;
+
     /**
      * A paint handler for this object
      */

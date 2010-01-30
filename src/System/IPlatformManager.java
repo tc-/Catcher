@@ -38,5 +38,6 @@ public interface IPlatformManager {
      * @return view manager to use
      */
     IViewManager getViewManager();
-    
+
+    void quit();
 }

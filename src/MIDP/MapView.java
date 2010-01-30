@@ -94,7 +94,15 @@ public class MapView extends CatcherCanvas implements IMapView {
         g.drawLine(getWidth()/2, getHeight()/2-5,
                 getWidth()/2, getHeight()/2+5);
     }
-    
+
+    /**
+     * Called when a menu item has been selected
+     * @param menuItem: index in view menu array
+     */
+    void menuActionView(int menuItem) {
+        System.out.println("menuActionItem: "+String.valueOf(menuItem));
+    }
+
     protected  void keyPressedView(int keyCode) {
         switch(getGameAction(keyCode)) {
             case UP:

@@ -16,11 +16,16 @@ public class Menu implements Modal {
     private int nofItems;
     private String[] globalItems;
     private String[] viewItems={};
+    private boolean execute = false;
 
     Menu(String[] globalItems) {
         this.globalItems = globalItems;
         nofItems = globalItems.length;
         index = 0;
+    }
+
+    public boolean execute() {
+        return execute;
     }
 
     public void viewItems(String[] viewItems) {
@@ -77,17 +82,15 @@ public class Menu implements Modal {
 
     // Move to previous item in list
     public void up() {
-        System.out.println("Menu.up");
         index = (index<=0? nofItems-1 : --index);
     }
 
     // Move to next item in menu
     public void down() {
-        System.out.println("Menu.down");
         index = (index>=nofItems-1? 0: ++index);
     }
 
-    public int select() {
+    public int getAction() {
         String sel = "";
         if (index < viewItems.length) {
             sel = viewItems[index];
@@ -96,12 +99,16 @@ public class Menu implements Modal {
         }
         System.out.println("Menu.select: "+sel);
 
-        return index-viewItems.length; // viewItems are negative
-    }
+        // We need to put global index first as it's not aware of viewItems
+        int ret;
+        if (index < viewItems.length) {
+            ret = index+globalItems.length;
+        } else {
+            ret = index-viewItems.length;
+        }
 
-    private void execute() {
-        // execute function associated with selected index
-        index = 0; // Reset index
+        reset();
+        return ret;
     }
 
     public boolean keyPressed(int keyCode, Canvas canvas) {
@@ -126,9 +133,15 @@ public class Menu implements Modal {
                 break;
             case Canvas.FIRE:
                 // Execute selected items action
-                execute();
+                execute = true;
                 return true;
         }
         return false;
     }
+
+    private void reset() {
+        execute = false;
+        index = 0;
+    }
+
 }
