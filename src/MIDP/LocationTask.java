@@ -22,7 +22,14 @@ public class LocationTask implements Runnable {
     }
 
     public void run() {
-        provider.setLocationListener(listener, -1, -1, -1);
+        try
+        {
+            if ((provider != null) && (listener != null)) {
+                provider.setLocationListener(listener, -1, -1, -1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

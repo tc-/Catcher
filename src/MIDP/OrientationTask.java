@@ -50,8 +50,8 @@ public class OrientationTask implements Runnable {
                 ex.printStackTrace();
                 aborted = true;
             }
-
         }
+        
     }
 
     public void abort() {
