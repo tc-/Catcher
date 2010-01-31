@@ -23,6 +23,7 @@ public class MapView extends CatcherCanvas implements IMapView {
     private Position mapCenter = new Position(57.77947, 14.22107);
 
     private int zoom=10;
+    private boolean autoFollow=true;
 
     private IMapProvider mapProvider = null;
     private final IPositionProvider positionProvider;
@@ -53,8 +54,10 @@ public class MapView extends CatcherCanvas implements IMapView {
     }
 
     public void setCenter(Position center) {
-        this.mapCenter = center;
-        repaint();
+        if (autoFollow) {
+            this.mapCenter = center;
+            repaint();
+        }
     }
 
     public int getZoom() {
@@ -118,7 +121,9 @@ public class MapView extends CatcherCanvas implements IMapView {
                 break;
             case 2:
                 // Auto follow
-                System.out.println("menu Auto follow (not impl)");
+                System.out.println("menu Auto follow");
+                mapCenter = positionProvider.getLastPosition();
+                autoFollow = true;
                 break;
             case 3:
                 // Add location
@@ -137,21 +142,26 @@ public class MapView extends CatcherCanvas implements IMapView {
             case UP:
                 mapCenter = mapProvider.XYtoPosition(getWidth()/2, getHeight()
                         /2-50, mapCenter, getWidth(), getHeight(), zoom);
+                autoFollow = false;
                 break;
             case DOWN:
                 mapCenter = mapProvider.XYtoPosition(getWidth()/2, getHeight()
                         /2+50, mapCenter, getWidth(), getHeight(), zoom);
+                autoFollow = false;
                 break;
             case LEFT:
                 mapCenter = mapProvider.XYtoPosition(getWidth()/2-50, 
                         getHeight()/2, mapCenter, getWidth(), getHeight(), zoom);
+                autoFollow = false;
                 break;
             case RIGHT:
                 mapCenter = mapProvider.XYtoPosition(getWidth()/2+50, 
                         getHeight()/2, mapCenter, getWidth(), getHeight(), zoom);
+                autoFollow = false;
                 break;
             case FIRE:
                 mapCenter = positionProvider.getLastPosition();
+                autoFollow = true;
                 break;
         }
         switch(keyCode) {
