@@ -114,44 +114,26 @@ public abstract class CatcherCanvas extends Canvas {
         }
     }
 
-    protected void paintSelectedCache(Graphics g) {
-        int x = 0;
-        int y = 0;
-        int width = getWidth();
-        int height = HEIGHT_CACHELISTITEM;
+    protected void paintCache(Graphics g, int x, int y, int width, int height,
+            int heading, Cache cache) {
 
         g.setClip(x, y, width, height);
-
-        int ht = HEIGHT_CACHELISTITEM;
-
         g.setColor(COLOR_CACHELIST_BG);
         g.fillRect(x, y, width, height);
 
-        // fake data until cache store is in place
-        String cacheName = "Under the bridge";
-        int cacheType = Cache.CT_REGULAR;
-
-
-        // GC.com currently has 9 levels, 1 to 5 in .5 increments. We represent
-        // them as 0-8 internally. Others might have different scales.
-        int terrain = 3;
-        int difficulty = 2;
-        int[] lastLogs = {0,2,0,1};
-        int heading = 3; // clockwise degree from north / 45;
-
-        g.drawImage(viewResources.getIcon(IC_CACHES_OFFS+cacheType), x, y,
+        g.drawImage(viewResources.getIcon(IC_CACHES_OFFS+cache.type), x, y,
                 Graphics.TOP|Graphics.LEFT);
         g.drawImage(viewResources.getIcon(IC_COMPASS_OFFS+heading), width, y,
                 Graphics.TOP|Graphics.RIGHT);
 
         // Draws a set of squares to indicate cache health based on latest logs
-        for (int i=0;i<lastLogs.length;i++) {
-            g.setColor(COLOR_LOG[lastLogs[i]]);
+        for (int i=0;i<cache.lastLogsType.length;i++) {
+            g.setColor(COLOR_LOG[cache.lastLogsType[i]]);
             g.fillRect(x+16, y+(i<<2), 4, 4);
         }
 
         g.setColor(COLOR_TEXT);
-        g.drawString(cacheName, x+20, y,
+        g.drawString(cache.name, x+20, y,
                 Graphics.LEFT | Graphics.TOP);
     }
 

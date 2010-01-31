@@ -9,6 +9,7 @@ package MIDP;
 import GUI.ICacheView;
 import GUI.IViewNavigator;
 import System.Cache;
+import System.Position;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 
@@ -16,9 +17,35 @@ public class CacheView extends CatcherCanvas implements ICacheView {
 
     private Cache cache;
 
-    private int fontFace = Font.FACE_SYSTEM;
     // Careful when changing globalItems! menuAction() assumes a certain order!
-    private String[] viewItems = {"Cache list", "Set nearest"};
+    private String[] viewItems = {"Cache list", "Set nearest", "Show hint"};
+    private int page=0;
+    private static final int PAGE_DESC=0;
+    private static final int PAGE_LOGS=1;
+
+    public CacheView(IViewNavigator viewNavigator, ViewResources viewResources) {
+        super(viewNavigator);
+
+        setFullScreenMode(true);
+        this.viewResources = viewResources;
+        initFakeCache(); // Placeholder
+    }
+
+    // This is just a placeholder
+    private void initFakeCache() {
+        cache = new Cache();
+        cache.name="Catcher fake cache placeholder";
+        cache.code="OC3G4F5";
+        cache.difficulty=0;
+        cache.terrain=0;
+        cache.type=cache.CT_REGULAR;
+        cache.position= new Position(57.1, 14.8);
+        cache.description="This is the description of the cache.";
+        cache.hint="Under sten";
+        cache.lastLogs="TFTC\n";
+        int[] type={0,1};
+        cache.lastLogsType=type;
+    }
 
     public Cache getCache() {
         return cache;
@@ -28,62 +55,25 @@ public class CacheView extends CatcherCanvas implements ICacheView {
         this.cache = cache;
     }
 
-    /**
-     * constructor
-     */
-    public CacheView(IViewNavigator viewNavigator, ViewResources viewResources) {
-        super(viewNavigator);
-        
-        setFullScreenMode(true);
-        this.viewResources = viewResources;
+    private int getHeading(Position p) {
+        return 0;
     }
-    
-    /**
-     * paint
-     */
+
+    private void paintCacheAttributes(Graphics g) {
+        int ht = sysFont.getHeight();
+        int x = 0;
+        int y = 20;
+        int width = getWidth();
+        int tl = Graphics.TOP|Graphics.LEFT;
+        int height = (16>sysFont.getHeight()? 16 : sysFont.getHeight());
+        paintCache(g, x, y, width, height, getHeading(cache.position), cache);
+        y += sysFont.getHeight();
+    }
+
     public void paintView(Graphics g) {
         g.setColor(COLOR_BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight()-HEIGHT_STATUSBAR);
-
-        g.setColor(0);
-        int y = 0;
-        Font font;
-        font = Font.getFont(fontFace, Font.STYLE_PLAIN, Font.SIZE_SMALL);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_PLAIN, Font.SIZE_MEDIUM);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_PLAIN, Font.SIZE_LARGE);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_BOLD, Font.SIZE_SMALL);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_BOLD, Font.SIZE_MEDIUM);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_BOLD, Font.SIZE_LARGE);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_ITALIC, Font.SIZE_SMALL);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_ITALIC, Font.SIZE_MEDIUM);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
-        font = Font.getFont(fontFace, Font.STYLE_ITALIC, Font.SIZE_LARGE);
-        g.setFont(font);
-        g.drawString(String.valueOf(font.getHeight())+" Testing 123.!&/(#%", 0, y, Graphics.TOP|Graphics.LEFT);
-        y += font.getHeight();
+        paintCacheAttributes(g);
     }
     
     /**
@@ -91,22 +81,26 @@ public class CacheView extends CatcherCanvas implements ICacheView {
      * @param menuItem: index in view menu array
      */
     void menuActionView(int menuItem) {
-        System.out.println("menuActionItem: "+String.valueOf(menuItem));
+        switch(menuItem) {
+            case 0:
+                // Cache list
+                System.out.println("menu Cache list (not impl)");
+                break;
+            case 1:
+                // Set nearest
+                System.out.println("menu Set nearest (not impl)");
+                break;
+            case 2:
+                // Show hint
+                System.out.println("menu Show hint (not impl)");
+                break;
+        }
     }
 
     /**
      * Called when a key is pressed.
      */
     protected  void keyPressedView(int keyCode) {
-        switch (keyCode) {
-            case KEY_NUM1:
-                fontFace = Font.FACE_MONOSPACE;
-                break;
-            case KEY_NUM2:
-                fontFace = Font.FACE_PROPORTIONAL;
-                break;
-        }
-        this.repaint();
     }
 
     public void activate() {

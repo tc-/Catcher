@@ -36,6 +36,7 @@ public class Cache {
 
     public String hint;         // decoded
     public String name;
+    public String code;         // Cache id-code
     public String description;  // For sources with short and longdesc this is
                                 // both of them concatenated
     public String lastLogs; // last logs concatenated, decoded
