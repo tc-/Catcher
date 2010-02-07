@@ -164,13 +164,15 @@ public class MercatorMap implements IMapProvider {
         int firstTileX = mapTileX[0]-tilesLeft;
         int firstTileY = mapTileY[0]-tilesAbove;
 
+        int maxXY = (1 << zoom)-1;
         Object map = imageLoader.createImage(width, height);
         Object imTile = null;
-        System.out.println("mercmap: nofTilesX: "+String.valueOf(nofTilesX));
-        System.out.println("mercmap: nofTilesY: "+String.valueOf(nofTilesY));
         for (int y=0; y<nofTilesY; y++) {
+            // maxXY is n^2-1 and can mask tileX, tileY into range
+            int tileY = (firstTileY+y) & maxXY;
             for (int x=0; x<nofTilesX; x++) {
-                imTile = getTile(firstTileX+x, firstTileY+y, zoom);
+                int tileX = (firstTileX+x) & maxXY;
+                imTile = getTile(tileX, tileY, zoom);
                 map = imageLoader.drawImage(map, imTile, firstX+(x<<8),
                         firstY+(y<<8));
             }
