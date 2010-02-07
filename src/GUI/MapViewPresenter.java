@@ -20,12 +20,17 @@ public class MapViewPresenter {
     private final IPositionProvider positionProvider;
     private final IMapProvider mapProvider;
 
-    public MapViewPresenter(CatcherMain main, IMapView view, ICacheProvider cacheProvider, IPositionProvider positionProvider, IMapProvider mapProvider) {
+    public MapViewPresenter(CatcherMain main, IMapView view, ICacheProvider cacheProvider, IPositionProvider positionProvider,
+            IMapProvider mapProvider) {
         this.main = main;
         this.view = view;
         this.cacheProvider = cacheProvider;
         this.positionProvider = positionProvider;
         this.mapProvider = mapProvider;
+    }
+
+    public void keyPressed(int keyCode) {
+        
     }
 
 }
